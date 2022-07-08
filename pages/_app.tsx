@@ -1,8 +1,27 @@
-import '../styles/globals.css'
 import type { AppProps } from 'next/app'
+import '../styles/index.sass'
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
-}
+import 'primereact/resources/themes/lara-light-indigo/theme.css'
+import 'primereact/resources/primereact.min.css'
 
-export default MyApp
+import 'primeicons/primeicons.css'
+import 'plyr-react/dist/plyr.css'
+
+import Head from 'next/head'
+
+const MovieApp = (
+  {
+    Component,
+    pageProps
+  }: AppProps
+) => (
+  <>
+    <Head>
+      <title>Movies & Series</title>
+    </Head>
+
+    <Component {...pageProps} />
+  </>
+)
+
+export default MovieApp
