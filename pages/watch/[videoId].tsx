@@ -1,13 +1,17 @@
 import { GetServerSidePropsContext } from 'next'
-import Plyr from 'plyr-react'
-
 import { IVideoData } from '../../types'
+
 import fetch from 'node-fetch'
-
 import { useEffect, useState } from 'react'
-import { Button } from 'primereact/button'
 
+import { Button } from 'antd'
 import Router from 'next/router'
+
+import {
+  HomeOutlined,
+  StepBackwardOutlined,
+  StepForwardOutlined
+} from '@ant-design/icons'
 
 interface Buf {
   data: number[]
@@ -168,8 +172,11 @@ const WatchVideo = (
             onClick={
               () => Router.push('/')
             }
-            icon='pi pi-home'
-            className='p-button-rounded p-button-info'
+            type='primary'
+            shape='circle'
+            icon={
+              <HomeOutlined/>
+            }
           />
         </div>
           
@@ -186,25 +193,10 @@ const WatchVideo = (
       </div>
 
       <div>
-        <Plyr
-          options={
-            {
-              autoplay: true
-            }
-          }
-          source={
-            {
-              poster: props.data.CoverUrl,
-              type: 'video',
-              sources: [
-                {
-                  src: `${process.env.API_HOST}/video/${props.videoId}?s=${currSeason}&e=${currEpisode}`,
-                  type: 'video/mp4'
-                }
-              ]
-            }
-          }
-        />
+        
+        <video>
+          <source src={`${process.env.API_HOST}/video/${props.videoId}?s=${currSeason}&e=${currEpisode}`} />
+        </video>
       </div>
 
       <div
@@ -225,8 +217,15 @@ const WatchVideo = (
           <Button
             disabled={disablePrevButton}
             onClick={prevEpisode}
-            icon='pi pi-arrow-left'
-            className='p-button-rounded p-button-danger'
+            shape='circle'
+            icon={
+              <StepBackwardOutlined />
+            }
+            style={
+              {
+                backgroundColor: '#ff6565'
+              }
+            }
           />
         </div>
 
@@ -234,8 +233,15 @@ const WatchVideo = (
           <Button
             disabled={disableNextButton}
             onClick={nextEpisode}
-            icon='pi pi-arrow-right'
-            className='p-button-rounded p-button-success'
+            shape='circle'
+            icon={
+              <StepForwardOutlined />
+            }
+            style={
+              {
+                backgroundColor: '#8eff65'
+              }
+            }
           />
         </div>
       </div>

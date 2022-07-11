@@ -1,7 +1,7 @@
 import Image, { ImageProps } from 'next/image'
 import { useState } from 'react'
 
-import { Skeleton } from 'primereact/skeleton'
+import { Skeleton } from 'antd'
 
 interface SkeletonImageProps extends ImageProps {
   src: any
@@ -10,7 +10,7 @@ interface SkeletonImageProps extends ImageProps {
 const SkeletonImage = (
   props: SkeletonImageProps
 ) => {
-  const [imgHasLoaded, setImgHasLoaded] = useState(true)
+  const [imgHasLoaded, setImgHasLoaded] = useState(false)
 
   return (
     <div
@@ -30,9 +30,13 @@ const SkeletonImage = (
           }
         }
       >
-        <Skeleton
-          width={props.width as any}
-          height={props.height as any}
+        <Skeleton.Image
+          style={
+            {
+              width: props.width as any,
+              height: props.height as any
+            }
+          }
         />
       </div>
 
@@ -41,9 +45,6 @@ const SkeletonImage = (
           <Image
             {...props}
             onLoad={
-              () => setImgHasLoaded(true)
-            }
-            onError={
               () => setImgHasLoaded(true)
             }
           />

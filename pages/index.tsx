@@ -2,15 +2,20 @@ import type { NextPage } from 'next'
 import fetch from 'node-fetch'
 
 import { IVideoData } from '../types'
-import { Tag } from 'primereact/tag'
-
-import { Dialog } from 'primereact/dialog'
-import { Dropdown } from 'primereact/dropdown'
 
 import { Dispatch, SetStateAction, useState } from 'react'
 import SkeletonImage from '../components/SkeletonImage'
 
-import { Button } from 'primereact/button'
+import {
+  Modal,
+  Tag,
+  Dropdown,
+  Button,
+  Menu
+} from 'antd'
+
+import type { MenuProps } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
 
 interface IApiVideoData {
   videos: IVideoData[]
@@ -29,6 +34,29 @@ const Home: NextPage<IApiVideoData> = (props) => {
     null
   >(null)
 
+  const closeModal = (videoId: string) => {
+    videoDialogStates[videoId][1](false)
+    setCurrSeason(null)
+  }
+
+  const onClickMenu: MenuProps['onClick'] = (props) => {
+    console.log(props.key)
+
+    const [
+      id,
+      season,
+      episodes
+    ] = props.key.split('-')
+
+    setCurrSeason(
+      {
+        id,
+        season: Number(season),
+        episodes: Number(episodes)
+      }
+    )
+  }
+
   return (
     <>
       <h1 className='header'>
@@ -43,169 +71,183 @@ const Home: NextPage<IApiVideoData> = (props) => {
 
               return (
                 <div key={key}>
-                  <Dialog
-                    visible={
-                      videoDialogStates[video.VideoId][0]
-                    }
-                    onHide={
-                      () => {
-                        videoDialogStates[video.VideoId][1](false)
-                        setCurrSeason(null)
-                      }
-                    }
-                    header={video.MetaTitle}
-                    style={
-                      {
-                        maxWidth: '480px'
-                      }
-                    }
-                  >
-                    <div
-                      className='flex col wrap'
-                      style={
-                        {
-                          justifyContent: 'center',
-                          alignItems: 'center'
+                  {
+                    videoDialogStates[video.VideoId][0] ? (
+                      <Modal
+                        visible={
+                          videoDialogStates[video.VideoId][0]
                         }
-                      }
-                    >
-                      <SkeletonImage
-                        width={240}
-                        height={120}
-                        src={video.CoverUrl}
-                        alt={`${video.MetaTitle} cover photo.`}
-                      />
-                    </div>
-
-                    <div>
-                      {video.MetaDesc}
-                    </div>
-
-                    <div
-                      className='flex row wrap'
-                      style={
-                        {
-                          gap: '6px'
+                        onOk={
+                          () => {
+                            closeModal(video.VideoId)
+                          }
                         }
-                      }
-                    >
-                      <div>
-                        <h3>
-                          Available Seasons
-                        </h3>
-                      </div>
-
-                      <div
+                        onCancel={
+                          () => {
+                            closeModal(video.VideoId)
+                          }
+                        }
                         style={
                           {
-                            marginTop: 'auto',
-                            marginBottom: 'auto'
+                            maxWidth: '480px'
                           }
                         }
                       >
-                        {
-                          video.IsAvailable ? (
-                            <Tag
-                              severity='success'
-                              rounded
-                            >
-                              Available
-                            </Tag>
-                          ) : (
-                            <Tag
-                              severity='danger'
-                              rounded
-                            >
-                              Unavailable
-                            </Tag>
-                          )
-                        }
-                      </div>
-                    </div>
-
-                    <div
-                      className='flex col wrap'
-                      style={
-                        {
-                          gap: '10px'
-                        }
-                      }
-                    >
-                      <Dropdown
-                        key={key}
-                        value={currSeason}
-                        disabled={!video.IsAvailable}
-                        placeholder='List of available seasons'
-                        style={
-                          {
-                            width: '240px'
-                          }
-                        }
-                        onChange={
-                          (e) => setCurrSeason(e.value)
-                        }
-                        options={
-                          (
-                            () => {
-                              const seasons = [],
-                                seasonCount = video.Seasons ?? 0
-
-                              for (let i = 0; i < seasonCount; i++)
-                                seasons.push(
-                                  {
-                                    label: `Season ${i + 1}`,
-                                    value: {
-                                      id: video.VideoId,
-                                      season: i + 1,
-                                      episodes: video.Episodes?.data[i] ?? 0
-                                    }
-                                  }
-                                )
-                              
-                              return seasons
+                        <div
+                          className='flex col wrap'
+                          style={
+                            {
+                              justifyContent: 'center',
+                              alignItems: 'center'
                             }
-                          )()
-                        }
-                      />
+                          }
+                        >
+                          <div>
+                            <h2 className='header'>
+                              {video.MetaTitle}
+                            </h2>
+                          </div>
 
-                      {
-                        currSeason !== null && currSeason.id === video.VideoId ? (
-                          () => {
-                            const elements = []
+                          <div>
+                            <SkeletonImage
+                              width={240}
+                              height={120}
+                              src={video.CoverUrl}
+                              alt={`${video.MetaTitle} cover photo.`}
+                            />
+                          </div>
+                        </div>
 
-                            for (let i = 0; i < currSeason.episodes; i++)
-                              elements.push(
-                                <Button
-                                  key={i}
-                                  label={
-                                    `Episode ${(i + 1).toString()}`
-                                  }
-                                  className='p-button-sm p-button-raised p-button-info p-button-text'
-                                  icon='pi pi-caret-right'
-                                  iconPos='right'
-                                  onClick={
-                                    () => window.location.href=`/watch/${video.VideoId}?s=${currSeason.season}&e=${i + 1}`
+                        <div>
+                          {video.MetaDesc}
+                        </div>
+
+                        <div
+                          className='flex row wrap'
+                          style={
+                            {
+                              gap: '6px'
+                            }
+                          }
+                        >
+                          <div>
+                            <h3>
+                              Available Seasons
+                            </h3>
+                          </div>
+
+                          <div
+                            style={
+                              {
+                                marginTop: '3px'
+                              }
+                            }
+                          >
+                            {
+                              video.IsAvailable ? (
+                                <Tag
+                                  color='success'
+                                >
+                                  Available
+                                </Tag>
+                              ) : (
+                                <Tag
+                                  color='error'
+                                >
+                                  Unavailable
+                                </Tag>
+                              )
+                            }
+                          </div>
+                        </div>
+
+                        <div
+                          className='flex col wrap'
+                          style={
+                            {
+                              gap: '10px'
+                            }
+                          }
+                        >
+                          <div>
+                            <Dropdown
+                              disabled={!video.IsAvailable}
+                              overlay={
+                                <Menu
+                                  onClick={onClickMenu}
+                                  items={
+                                    (
+                                      () => {
+                                        const seasons = [],
+                                          seasonCount = video.Seasons ?? 0
+          
+                                        for (let i = 0; i < seasonCount; i++)
+                                          seasons.push(
+                                            {
+                                              label: `Season ${i + 1}`,
+                                              key: video.VideoId + '-' + (i + 1 )+ '-' + video.Episodes?.data[i] ?? 0
+                                            }
+                                          )
+                                        
+                                        return seasons
+                                      }
+                                    )()
                                   }
                                 />
-                              )
-
-                            return (
-                              <div
-                                className='flex row wrap'
-                                style={
-                                  {
-                                    gap: '5px'
-                                  }
+                              }
+                            >
+                              <Button
+                                icon={
+                                  <DownOutlined />
                                 }
                               >
-                                {elements}
-                              </div>
-                            )
+                                {
+                                  currSeason?.season ? (
+                                    `Season ${currSeason.season}`
+                                  ) : 'Select Season'
+                                }
+                              </Button>
+                            </Dropdown>
+                          </div>
+
+                          {
+                            currSeason !== null && currSeason.id === video.VideoId ? (
+                              () => {
+                                const elements = []
+
+                                for (let i = 0; i < currSeason.episodes; i++)
+                                  elements.push(
+                                    <Button
+                                      key={i}
+                                      onClick={
+                                        () => window.location.href=`/watch/${video.VideoId}?s=${currSeason.season}&e=${i + 1}`
+                                      }
+                                    >
+                                      {
+                                        `Episode ${(i + 1).toString()}`
+                                      }
+                                    </Button>
+                                  )
+
+                                return (
+                                  <div
+                                    className='flex row wrap'
+                                    style={
+                                      {
+                                        gap: '5px'
+                                      }
+                                    }
+                                  >
+                                    {elements}
+                                  </div>
+                                )
+                              }
+                            )() : null
                           }
-                        )() : null
-                      }
-                    </div>
-                  </Dialog>
+                        </div>
+                      </Modal>
+                    ) : null
+                  }
   
                   <div
                     className='container'
