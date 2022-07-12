@@ -192,8 +192,7 @@ const WatchVideo = (
         </div>
       </div>
 
-      <div>
-        
+      <div>  
         <video>
           <source src={`${process.env.API_HOST}/video/${props.videoId}?s=${currSeason}&e=${currEpisode}`} />
         </video>
@@ -217,7 +216,6 @@ const WatchVideo = (
           <Button
             disabled={disablePrevButton}
             onClick={prevEpisode}
-            shape='circle'
             icon={
               <StepBackwardOutlined />
             }
@@ -233,7 +231,6 @@ const WatchVideo = (
           <Button
             disabled={disableNextButton}
             onClick={nextEpisode}
-            shape='circle'
             icon={
               <StepForwardOutlined />
             }
@@ -254,8 +251,6 @@ const WatchVideo = (
 }
 
 const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  console.log(context)
-
   const {
     s: season,
     e: episode,

@@ -47,6 +47,9 @@ const SkeletonImage = (
             onLoad={
               () => setImgHasLoaded(true)
             }
+            onError={
+              () => setImgHasLoaded(true)
+            }
           />
         )
       }

@@ -1,8 +1,8 @@
 import type { AppProps } from 'next/app'
 import '../styles/index.sass'
 
-import 'antd/dist/antd.css'
 import Head from 'next/head'
+import 'antd/dist/antd.dark.css'
 
 const MovieApp = (
   {

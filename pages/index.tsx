@@ -40,8 +40,6 @@ const Home: NextPage<IApiVideoData> = (props) => {
   }
 
   const onClickMenu: MenuProps['onClick'] = (props) => {
-    console.log(props.key)
-
     const [
       id,
       season,
@@ -185,7 +183,7 @@ const Home: NextPage<IApiVideoData> = (props) => {
                                           seasons.push(
                                             {
                                               label: `Season ${i + 1}`,
-                                              key: video.VideoId + '-' + (i + 1 )+ '-' + video.Episodes?.data[i] ?? 0
+                                              key: video.VideoId + '-' + (i + 1 ) + '-' + video.Episodes?.data[i] ?? 0
                                             }
                                           )
                                         
