@@ -15,6 +15,7 @@ interface IVideoData {
   CoverUrl?: string
 
   IsAvailable: boolean
+  VideoUrl?: string
 }
 
 export type {
