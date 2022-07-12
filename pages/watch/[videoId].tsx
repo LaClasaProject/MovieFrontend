@@ -198,6 +198,7 @@ const WatchVideo = (
           autoPlay
           height={1920}
           width={1080}
+          poster={props.data.CoverUrl ?? ''}
         >
           <source
             src={
