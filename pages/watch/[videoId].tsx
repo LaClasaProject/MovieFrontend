@@ -201,23 +201,17 @@ const WatchVideo = (
           poster={props.data.CoverUrl ?? ''}
         >
           <source
-            src={
-              (
-                () => {
-                  const isSeries = props.data.IsSeries,
-                    defaultUrl = `${process.env.API_HOST}/video/${props.videoId}?s=${currSeason}&e=${currEpisode}`
-
-                  if (!isSeries)
-                    return props.data.VideoUrl ?? defaultUrl
-                  else {
-                    if (props.data.VideoUrl)
-                      return props.data.VideoUrl.split('.mp4')[0] +
-                        `/S${currSeason}/E${currEpisode}` +
-                        '.mp4'
-                    else return defaultUrl
-                  }
-                }
-              )()
+            src=
+            {
+              props.data.VideoUrl ? (
+                props.data.IsSeries ? (
+                  props.data.VideoUrl.split('.mp4')[0] +
+                    `/S${currSeason}/E${currEpisode}` +
+                    '.mp4'
+                ) : props.data.VideoUrl
+              ) : (
+                `${process.env.API_HOST}/video/${props.videoId}?s=${currSeason}&e=${currEpisode}`
+              )
             }
           />
         </video>
