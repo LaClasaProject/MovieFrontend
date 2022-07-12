@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
 
   env: {
-    API_HOST: 'http://localhost:8080'
+    API_HOST: 'http://192.168.18.25:8080'
   },
 
   images: {
@@ -11,7 +11,7 @@ const nextConfig = {
       'example.com'
     ]
   },
-
+  
   eslint: {
     ignoreDuringBuilds: true
   }

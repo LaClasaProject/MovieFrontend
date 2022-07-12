@@ -44,7 +44,7 @@ const Home: NextPage<IApiVideoData> = (props) => {
       id,
       season,
       episodes
-    ] = props.key.split('-')
+    ] = props.key.split('_')
 
     setCurrSeason(
       {
@@ -183,7 +183,7 @@ const Home: NextPage<IApiVideoData> = (props) => {
                                           seasons.push(
                                             {
                                               label: `Season ${i + 1}`,
-                                              key: video.VideoId + '-' + (i + 1 ) + '-' + video.Episodes?.data[i] ?? 0
+                                              key: video.VideoId + '_' + (i + 1 ) + '_' + video.Episodes?.data[i] ?? 0
                                             }
                                           )
                                         
