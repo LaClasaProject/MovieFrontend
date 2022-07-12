@@ -4,6 +4,11 @@ const nextConfig = {
 
   env: {
     API_HOST: 'http://192.168.18.25:8080'
+  },
+  images: {
+    domains: [
+      'example.com'
+    ]
   }
 }
 

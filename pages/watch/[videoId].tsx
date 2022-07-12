@@ -53,7 +53,7 @@ const WatchVideo = (
       setDisableNextButton(nextButtonCheck)
       setDisablePrevButton(prevButtonCheck)
     },
-    []
+    [nextButtonCheck, prevButtonCheck]
   )
 
   const nextEpisode = () => {
@@ -193,7 +193,12 @@ const WatchVideo = (
       </div>
 
       <div>  
-        <video>
+        <video
+          controls
+          autoPlay
+          height={1920}
+          width={1080}
+        >
           <source
             src={
               (

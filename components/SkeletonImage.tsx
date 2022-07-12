@@ -44,6 +44,7 @@ const SkeletonImage = (
         !props.src ? null : (
           <Image
             {...props}
+            alt=''
             onLoad={
               () => setImgHasLoaded(true)
             }
