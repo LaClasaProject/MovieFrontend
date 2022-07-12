@@ -92,7 +92,7 @@ const WatchVideo = (
         }
       }, 
       undefined,
-      { shallow: true }
+      { shallow: false }
     )
   }
 
@@ -199,22 +199,18 @@ const WatchVideo = (
           height={1920}
           width={1080}
           poster={props.data.CoverUrl ?? ''}
-        >
-          <source
-            src=
-            {
-              props.data.VideoUrl ? (
-                props.data.IsSeries ? (
-                  props.data.VideoUrl.split('.mp4')[0] +
-                    `/S${currSeason}/E${currEpisode}` +
-                    '.mp4'
-                ) : props.data.VideoUrl
-              ) : (
-                `${process.env.API_HOST}/video/${props.videoId}?s=${currSeason}&e=${currEpisode}`
-              )
-            }
-          />
-        </video>
+          src={
+            props.data.VideoUrl ? (
+              props.data.IsSeries ? (
+                props.data.VideoUrl.split('.mp4')[0] +
+                  `/S${currSeason}/E${currEpisode}` +
+                  '.mp4'
+              ) : props.data.VideoUrl
+            ) : (
+              `${process.env.API_HOST}/video/${props.videoId}?s=${currSeason}&e=${currEpisode}`
+            )
+          }
+        />
       </div>
 
       <div
