@@ -210,7 +210,18 @@ const WatchVideo = (
               `${process.env.API_HOST}/video/${props.videoId}?s=${currSeason}&e=${currEpisode}`
             )
           }
-        />
+        >
+          {
+            props.data.SubtitlePath ? (
+              <track
+                src={props.data.SubtitlePath}
+                label={`English`}
+                kind={`subtitles`}
+              >
+              </track>
+            ) : null
+          }
+        </video>
       </div>
 
       <div
