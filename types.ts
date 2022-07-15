@@ -16,6 +16,9 @@ interface IVideoData {
 
   IsAvailable: boolean
   VideoUrl?: string
+
+  AddedAt: number
+  SubtitlePath?: string
 }
 
 export type {
