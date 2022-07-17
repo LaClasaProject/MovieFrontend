@@ -1,0 +1,9 @@
+{
+  "adsense": {
+    "enabled": false,
+    "client": "",
+    "ads": {
+      "slot": ""
+    }
+  }
+}

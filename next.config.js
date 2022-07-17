@@ -3,14 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
 
   env: {
-    API_HOST: 'http://192.168.18.25:8080',
-    adsense: {
-      enabled: false,
-      client: '',
-      ads: {
-        slot: ''
-      }
-    }
+    API_HOST: 'http://192.168.18.25:8080'
   },
 
   images: {

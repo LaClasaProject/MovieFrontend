@@ -5,6 +5,7 @@ import Head from 'next/head'
 import 'antd/dist/antd.dark.css'
 
 import Script from 'next/script'
+import config from '../../config.json'
 
 const MovieApp = (
   {
@@ -15,10 +16,10 @@ const MovieApp = (
   <>
     <Head>
       {
-        process.env.adsense?.enabled ? (
+        config.adsense.enabled ? (
           <Script
             async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${process.env.adsense?.client}`}
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${config.adsense.client}`}
             crossOrigin='anonymous'
           />
         ) : null

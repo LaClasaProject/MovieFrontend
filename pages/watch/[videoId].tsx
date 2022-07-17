@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react'
 import { Button } from 'antd'
 import Router from 'next/router'
 
+import config from '../../config.json'
+
 import {
   HomeOutlined,
   StepBackwardOutlined,
@@ -53,7 +55,7 @@ const WatchVideo = (
       setDisableNextButton(nextButtonCheck)
       setDisablePrevButton(prevButtonCheck)
 
-      if (process.env.adsense?.enabled) {
+      if (config.adsense.enabled) {
         const ads = document.getElementsByClassName("adsbygoogle")?.length ?? 0;
         for (let i = 0; i < ads; i++)
           try {
@@ -200,7 +202,7 @@ const WatchVideo = (
         </div>
 
         {
-          process.env.adsense?.enabled ? (
+          config.adsense.enabled ? (
             <div>
               <ins
                 className="adsbygoogle"
@@ -209,8 +211,8 @@ const WatchVideo = (
                     display: 'block'
                   }
                 }
-                data-ad-client={`ca-pub-${process.env.adsense?.client}`}
-                data-ad-slot={`ca-pub-${process.env.adsense?.ads.slot}`}
+                data-ad-client={`ca-pub-${config.adsense.client}`}
+                data-ad-slot={`ca-pub-${config.adsense.ads.slot}`}
                 data-ad-format="auto"
                 data-full-width-responsive="true"
               />
@@ -226,6 +228,10 @@ const WatchVideo = (
           height={1920}
           width={1080}
           poster={props.data.CoverUrl ?? ''}
+          controlsList='nodownload'
+          onContextMenu={
+            (e) => e.preventDefault()
+          }
           src={
             props.data.VideoUrl ? (
               props.data.IsSeries ? (

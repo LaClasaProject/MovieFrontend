@@ -17,6 +17,8 @@ import {
 import type { MenuProps } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 
+import config from '../../config.json'
+
 interface IApiVideoData {
   videos: IVideoData[]
 }
@@ -26,7 +28,7 @@ const Home: NextPage<IApiVideoData> = (props) => {
     [key: string]: [boolean, Dispatch<SetStateAction<boolean>>]
   } = {}
 
-  if (process.env.adsense?.enabled)
+  if (config.adsense.enabled)
     useEffect(
       () => {
         const ads = document.getElementsByClassName("adsbygoogle")?.length ?? 0;
@@ -74,7 +76,7 @@ const Home: NextPage<IApiVideoData> = (props) => {
       </h1>
 
       {
-        process.env.adsense?.enabled ? (
+        config.adsense.enabled ? (
           <div>
             <ins
               className="adsbygoogle"
@@ -83,8 +85,8 @@ const Home: NextPage<IApiVideoData> = (props) => {
                   display: 'block'
                 }
               }
-              data-ad-client={`ca-pub-${process.env.adsense?.client}`}
-              data-ad-slot={`ca-pub-${process.env.adsense?.ads.slot}`}
+              data-ad-client={`ca-pub-${config.adsense.client}`}
+              data-ad-slot={`ca-pub-${config.adsense.ads.slot}`}
               data-ad-format="auto"
               data-full-width-responsive="true"
             />
@@ -307,7 +309,7 @@ const Home: NextPage<IApiVideoData> = (props) => {
       </div>
 
       {
-        process.env.adsense?.enabled ? (
+        config.adsense.enabled ? (
           <div>
             <ins
               className="adsbygoogle"
@@ -316,8 +318,8 @@ const Home: NextPage<IApiVideoData> = (props) => {
                   display: 'block'
                 }
               }
-              data-ad-client={`ca-pub-${process.env.adsense?.client}`}
-              data-ad-slot={`ca-pub-${process.env.adsense?.ads.slot}`}
+              data-ad-client={`ca-pub-${config.adsense.client}`}
+              data-ad-slot={`ca-pub-${config.adsense.ads.slot}`}
               data-ad-format="auto"
               data-full-width-responsive="true"
             />
