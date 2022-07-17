@@ -17,8 +17,6 @@ import {
 import type { MenuProps } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 
-import config from '../config.json'
-
 interface IApiVideoData {
   videos: IVideoData[]
 }
@@ -27,19 +25,6 @@ const Home: NextPage<IApiVideoData> = (props) => {
   const videoDialogStates: {
     [key: string]: [boolean, Dispatch<SetStateAction<boolean>>]
   } = {}
-
-  if (config.adsense.enabled)
-    useEffect(
-      () => {
-        const ads = document.getElementsByClassName("adsbygoogle")?.length ?? 0;
-        for (let i = 0; i < ads; i++)
-          try {
-            const winProp = window as any
-            (winProp.adsbygoogle = winProp.adsbygoogle || []).push({})
-          } catch {}       
-      },
-      []
-    )
 
   const [currSeason, setCurrSeason] = useState<{
       season: number
@@ -75,25 +60,6 @@ const Home: NextPage<IApiVideoData> = (props) => {
       <h1 className='header'>
         Collection of Movies & Series
       </h1>
-
-      {
-        config.adsense.enabled ? (
-          <div>
-            <ins
-              className="adsbygoogle"
-              style={
-                {
-                  display: 'block'
-                }
-              }
-              data-ad-client={`ca-pub-${config.adsense.client}`}
-              data-ad-slot={`ca-pub-${config.adsense.ads.slot}`}
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            />
-          </div>
-        ) : null
-      }
 
       <div className='movie parent'>
         {
@@ -308,25 +274,6 @@ const Home: NextPage<IApiVideoData> = (props) => {
           )
         }
       </div>
-
-      {
-        config.adsense.enabled ? (
-          <div>
-            <ins
-              className="adsbygoogle"
-              style={
-                {
-                  display: 'block'
-                }
-              }
-              data-ad-client={`ca-pub-${config.adsense.client}`}
-              data-ad-slot={`ca-pub-${config.adsense.ads.slot}`}
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            />
-          </div>
-        ) : null
-      }
     </div>
   )
 }

@@ -7,8 +7,6 @@ import { useEffect, useState } from 'react'
 import { Button } from 'antd'
 import Router from 'next/router'
 
-import config from '../../config.json'
-
 import {
   HomeOutlined,
   StepBackwardOutlined,
@@ -54,15 +52,6 @@ const WatchVideo = (
     () => {
       setDisableNextButton(nextButtonCheck)
       setDisablePrevButton(prevButtonCheck)
-
-      if (config.adsense.enabled) {
-        const ads = document.getElementsByClassName("adsbygoogle")?.length ?? 0;
-        for (let i = 0; i < ads; i++)
-          try {
-            const winProp = window as any
-            (winProp.adsbygoogle = winProp.adsbygoogle || []).push({})
-          } catch {}
-      }
     },
     [nextButtonCheck, prevButtonCheck]
   )
@@ -201,25 +190,6 @@ const WatchVideo = (
             }
           </h2>
         </div>
-
-        {
-          config.adsense.enabled ? (
-            <div>
-              <ins
-                className="adsbygoogle"
-                style={
-                  {
-                    display: 'block'
-                  }
-                }
-                data-ad-client={`ca-pub-${config.adsense.client}`}
-                data-ad-slot={`ca-pub-${config.adsense.ads.slot}`}
-                data-ad-format="auto"
-                data-full-width-responsive="true"
-              />
-            </div>
-          ) : null
-        }
       </div>
 
       <div>  
