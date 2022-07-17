@@ -5,7 +5,7 @@ import Head from 'next/head'
 import 'antd/dist/antd.dark.css'
 
 import Script from 'next/script'
-import config from '../../config.json'
+import config from '../config.json'
 
 const MovieApp = (
   {

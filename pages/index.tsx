@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 
 import { IVideoData } from '../types'
 
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useState, useEffect } from 'react'
 import SkeletonImage from '../components/SkeletonImage'
 
 import {
@@ -17,7 +17,7 @@ import {
 import type { MenuProps } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 
-import config from '../../config.json'
+import config from '../config.json'
 
 interface IApiVideoData {
   videos: IVideoData[]
