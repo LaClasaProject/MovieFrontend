@@ -26,6 +26,18 @@ const Home: NextPage<IApiVideoData> = (props) => {
     [key: string]: [boolean, Dispatch<SetStateAction<boolean>>]
   } = {}
 
+  if (process.env.adsense?.enabled)
+    useEffect(
+      () => {
+        const ads = document.getElementsByClassName("adsbygoogle")?.length ?? 0;
+        for (let i = 0; i < ads; i++)
+          try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          } catch {}       
+      },
+      []
+    )
+
   const [currSeason, setCurrSeason] = useState<{
       season: number
       episodes: number
@@ -56,10 +68,29 @@ const Home: NextPage<IApiVideoData> = (props) => {
   }
 
   return (
-    <>
+    <div className='flex col wrap'>
       <h1 className='header'>
         Collection of Movies & Series
       </h1>
+
+      {
+        process.env.adsense?.enabled ? (
+          <div>
+            <ins
+              className="adsbygoogle"
+              style={
+                {
+                  display: 'block'
+                }
+              }
+              data-ad-client={`ca-pub-${process.env.adsense?.client}`}
+              data-ad-slot={`ca-pub-${process.env.adsense?.ads.slot}`}
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            />
+          </div>
+        ) : null
+      }
 
       <div className='movie parent'>
         {
@@ -274,7 +305,26 @@ const Home: NextPage<IApiVideoData> = (props) => {
           )
         }
       </div>
-    </>
+
+      {
+        process.env.adsense?.enabled ? (
+          <div>
+            <ins
+              className="adsbygoogle"
+              style={
+                {
+                  display: 'block'
+                }
+              }
+              data-ad-client={`ca-pub-${process.env.adsense?.client}`}
+              data-ad-slot={`ca-pub-${process.env.adsense?.ads.slot}`}
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            />
+          </div>
+        ) : null
+      }
+    </div>
   )
 }
 

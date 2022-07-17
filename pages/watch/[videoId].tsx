@@ -52,6 +52,14 @@ const WatchVideo = (
     () => {
       setDisableNextButton(nextButtonCheck)
       setDisablePrevButton(prevButtonCheck)
+
+      if (process.env.adsense?.enabled) {
+        const ads = document.getElementsByClassName("adsbygoogle")?.length ?? 0;
+        for (let i = 0; i < ads; i++)
+          try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          } catch {}
+      }
     },
     [nextButtonCheck, prevButtonCheck]
   )
@@ -190,6 +198,25 @@ const WatchVideo = (
             }
           </h2>
         </div>
+
+        {
+          process.env.adsense?.enabled ? (
+            <div>
+              <ins
+                className="adsbygoogle"
+                style={
+                  {
+                    display: 'block'
+                  }
+                }
+                data-ad-client={`ca-pub-${process.env.adsense?.client}`}
+                data-ad-slot={`ca-pub-${process.env.adsense?.ads.slot}`}
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+              />
+            </div>
+          ) : null
+        }
       </div>
 
       <div>  
@@ -212,11 +239,18 @@ const WatchVideo = (
           }
         >
           {
+            /* Support english for now */
+
             props.data.SubtitlePath ? (
               <track
-                src={props.data.SubtitlePath}
-                label={`English`}
-                kind={`subtitles`}
+                src={
+                  props.data.IsSeries ? (
+                    `${props.data.SubtitlePath}/S${currSeason}/E${currEpisode}.vtt`
+                  ) : props.data.SubtitlePath
+                }
+                label='English'
+                kind='captions'
+                srcLang='en'
               >
               </track>
             ) : null
