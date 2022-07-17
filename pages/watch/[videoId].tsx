@@ -194,6 +194,7 @@ const WatchVideo = (
 
       <div>  
         <video
+          crossOrigin='anonymous'
           controls
           autoPlay
           height={1920}
