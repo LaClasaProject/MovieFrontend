@@ -34,7 +34,8 @@ const Home: NextPage<IApiVideoData> = (props) => {
         const ads = document.getElementsByClassName("adsbygoogle")?.length ?? 0;
         for (let i = 0; i < ads; i++)
           try {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            const winProp = window as any
+            (winProp.adsbygoogle = winProp.adsbygoogle || []).push({})
           } catch {}       
       },
       []
