@@ -229,6 +229,7 @@ const WatchVideo = (
                 label='English'
                 kind='captions'
                 srcLang='en'
+                default
               >
               </track>
             ) : null
