@@ -42,7 +42,9 @@ const IndexPage = () => (
         style={
           {
             color: '#DDDDDD',
-            fontSize: '16px'
+            fontSize: '16px',
+
+            textAlign: 'center'
           }
         }
       >
@@ -56,7 +58,7 @@ const IndexPage = () => (
         size='large'
         onClick={
           () => {
-            Router.push('/videos')
+            Router.push('/watch')
           }
         }
         icon={
