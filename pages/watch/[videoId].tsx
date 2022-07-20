@@ -287,6 +287,10 @@ const WatchVideo = (
           />
         </div>
       </div>
+
+      <script
+        src='https://vjs.zencdn.net/7.20.1/video.min.js'
+      />
     </div>
   ) : (
     <div>
