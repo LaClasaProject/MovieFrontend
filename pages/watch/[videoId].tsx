@@ -195,9 +195,14 @@ const WatchVideo = (
       <div>  
         <video
           crossOrigin='anonymous'
-          className='video-js vjs-theme-city'
           controls
           autoPlay
+          style={
+            {
+              maxWidth: '1080px',
+              maxHeight: '1920px'
+            }
+          }
           height={1920}
           width={1080}
           poster={props.data.CoverUrl ?? ''}
@@ -282,10 +287,6 @@ const WatchVideo = (
           />
         </div>
       </div>
-
-      <script
-        src='https://vjs.zencdn.net/7.20.1/video.min.js'
-      />
     </div>
   ) : (
     <div>
