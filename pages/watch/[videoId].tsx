@@ -194,15 +194,10 @@ const WatchVideo = (
 
       <div>  
         <video
-          className='video-js'
+          crossOrigin='anonymous'
+          className='video-js vjs-theme-city'
           controls
           autoPlay
-          style={
-            {
-              maxWidth: '1080px',
-              maxHeight: '1920px'
-            }
-          }
           height={1920}
           width={1080}
           poster={props.data.CoverUrl ?? ''}

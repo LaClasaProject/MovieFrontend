@@ -16,6 +16,10 @@ const MovieApp = (
         href='https://vjs.zencdn.net/7.20.1/video-js.css'
         rel='stylesheet'
       />
+      <link
+        href="https://unpkg.com/@videojs/themes@1/dist/city/index.css"
+        rel='stylesheet'
+      />
       <title>Movies & Series</title>
     </Head>
 
