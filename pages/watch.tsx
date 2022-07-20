@@ -252,17 +252,25 @@ const VideoPage: NextPage<IApiVideoData> = (props) => {
                   >
                     <div className='poster'>
                       <SkeletonImage
+                        style={
+                          !video.IsSeries && !video.IsAvailable ? (
+                            {
+                              cursor: 'not-allowed',
+                              filter: 'grayscale(100%)'
+                            }
+                          ) : undefined
+                        }
                         width={220}
                         height={340}
                         src={video.PosterUrl ?? ''}
                         alt={video.MetaTitle}
                         onClick={
                           () => {
-                            if (!video.IsSeries)
+                            if (!video.IsSeries) {
+                              if (!video.IsAvailable) return
                               window.location.href = `/watch/${video.VideoId}`
-                            else {
+                            } else
                               videoDialogStates[video.VideoId][1](true)
-                            }
                           }
                         }
                       />
