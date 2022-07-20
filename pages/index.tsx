@@ -1,4 +1,7 @@
 import { Button } from 'antd'
+import Router from 'next/router'
+
+import { ArrowRightOutlined } from '@ant-design/icons'
 
 const IndexPage = () => (
   <div 
@@ -15,12 +18,20 @@ const IndexPage = () => (
       }
     }
   >
-    <div className='flex col wrap'>
+    <div
+      className='flex col wrap'
+      style={
+        {
+          maxWidth:' 480px'
+        }
+      }
+    >
       <div
         className='header'
         style={
           {
-            fontSize: '28px'
+            fontSize: '40px',
+            fontWeight: 'bold'
           }
         }
       >
@@ -43,6 +54,14 @@ const IndexPage = () => (
       <Button
         type='primary'
         size='large'
+        onClick={
+          () => {
+            Router.push('/videos')
+          }
+        }
+        icon={
+          <ArrowRightOutlined />
+        }
       >
         View Movies
       </Button>
