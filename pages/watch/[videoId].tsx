@@ -170,7 +170,7 @@ const WatchVideo = (
         >
           <Button
             onClick={
-              () => Router.push('/')
+              () => Router.push('/watch')
             }
             type='primary'
             shape='circle'
