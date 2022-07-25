@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@types/react-slick": "^0.23.10",
     "antd": "^4.21.6",
+    "moment": "^2.29.4",
     "next": "12.2.0",
     "node-fetch": "^3.2.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-responsive-carousel": "^3.2.23",
     "sass": "^1.53.0",
     "sharp": "^0.30.7"
   },

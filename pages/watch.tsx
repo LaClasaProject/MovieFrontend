@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import fetch from 'node-fetch'
 
-import { IVideoData } from '../types'
+import { IVideoData } from '../src/types'
 
 import { Dispatch, SetStateAction, useState, useEffect } from 'react'
 import SkeletonImage from '../components/SkeletonImage'

@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from 'next'
-import { IVideoData } from '../../types'
+import { IVideoData } from '../../src/types'
 
 import fetch from 'node-fetch'
 import { useEffect, useState } from 'react'
