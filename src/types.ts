@@ -22,6 +22,11 @@ interface IVideoData {
   SubtitlePath?: string
 }
 
+interface IEpisodeDataV2 {
+  title: string
+  description: string
+}
+
 interface IVideoDataV2 {
   VideoId: string
   AddedAt: number
@@ -36,10 +41,7 @@ interface IVideoDataV2 {
   SubsPath?: string
 
   Seasons?: number
-  Episodes?: {
-    data: number[]
-    type: Buffer
-  }
+  Episodes?: number[]
 
   MetaTitle: string
   MetaDesc?: string
@@ -49,9 +51,14 @@ interface IVideoDataV2 {
 
   HideIfLocked?: boolean
   TotalRuntime: number
+
+  TrailerUrl?: string
+  EpisodesData?: IEpisodeDataV2[][]
 }
 
 export type {
   IVideoData, // remove soon
-  IVideoDataV2
+  IVideoDataV2,
+
+  IEpisodeDataV2
 }

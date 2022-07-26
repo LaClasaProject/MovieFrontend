@@ -14,7 +14,8 @@ import { convertMsToStringTime } from '../src/utils'
 const WatchCarousel = (
   props: {
     videos: IVideoDataV2[],
-    header: React.ReactNode
+    header: React.ReactNode,
+    onClickPlay: (video: IVideoDataV2) => any
   }
 ) => (
   <div
@@ -107,6 +108,9 @@ const WatchCarousel = (
                     }
                   >
                     <PlayCircleFilled
+                      onClick={
+                        () => props.onClickPlay(video)
+                      }
                       className={
                         V2CarouselCss['carousel-play-button']
                       }
