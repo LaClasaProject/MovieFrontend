@@ -1,74 +1,47 @@
-import { Button } from 'antd'
-import Router from 'next/router'
-
-import { ArrowRightOutlined } from '@ant-design/icons'
-
-const IndexPage = () => (
-  <div 
-    className='flex col wrap'
-    style={
+const HomePage = () => (
+  <div
+  style={
       {
+        textAlign: 'center',
+        display: 'flex',
+
+        flexDirection: 'column',
+        flexWrap: 'wrap',
+
         justifyContent: 'center',
-        alignItems: 'center',
-
-        marginTop: '32px',
-        marginBottom: '32px',
-
-        gap: '20px'
+        alignItems: 'center'
       }
     }
   >
+
     <div
-      className='flex col wrap'
       style={
         {
-          maxWidth:' 480px'
+          fontFamily: 'Bebas Neue',
+          fontSize: '64px'
         }
       }
     >
-      <div
-        className='header'
-        style={
-          {
-            fontSize: '40px',
-            fontWeight: 'bold'
-          }
-        }
-      >
-        {process.env.SITE_TITLE}
-      </div>
-
-      <div
-        style={
-          {
-            color: '#DDDDDD',
-            fontSize: '16px',
-
-            textAlign: 'center'
-          }
-        }
-      >
-        {process.env.SITE_DESCRIPTION}
-      </div>
+      Hello User!
     </div>
 
-    <div>
-      <Button
-        type='primary'
-        size='large'
-        onClick={
-          () => {
-            Router.push('/watch')
-          }
+    <div
+      style={
+        {
+          fontFamily: 'Lato',
+          fontSize: '18px',
+
+          maxWidth: '340px'
         }
-        icon={
-          <ArrowRightOutlined />
-        }
-      >
-        View Movies
-      </Button>
+      }
+    >
+      This part of the website, which includes the login page is still under maintenance.
+      You can watch shows and movies on this
+
+      <a href='/watch'> link</a>:
     </div>
+
   </div>
 )
 
-export default IndexPage
+export default HomePage

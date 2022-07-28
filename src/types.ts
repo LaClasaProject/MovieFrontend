@@ -1,64 +1,75 @@
-// remove soon
-interface IVideoData {
-  VideoId: string
-  IsSeries: boolean
-  
-  MetaTitle: string
-  MetaDesc: string
+// Types from MovieBackend
 
-  Seasons?: number
-  Episodes?: {
-    data: number[]
-    type: 'Buffer'
-  }
-
-  PosterUrl?: string
-  CoverUrl?: string
-
-  IsAvailable: boolean
-  VideoUrl?: string
-
-  AddedAt: number
-  SubtitlePath?: string
-}
-
-interface IEpisodeDataV2 {
+interface IEpisodeData {
   title: string
-  description: string
+  desc?: string
+
+  thumbnail?: string
 }
 
-interface IVideoDataV2 {
-  VideoId: string
-  AddedAt: number
+interface ISeriesData {
+  seasons: number
+  episodes: IEpisodeData[][]
+}
 
-  IsAvailable?: boolean
-  IsSeries?: boolean
+interface IVideoMeta {
+  title: string
+  desc?: string
+}
 
-  ThumbnailUrl?: string
-  CoverUrl?: string
+interface ITrailerData {
+  show?: boolean
+  url: string
+}
 
-  VideoUrl?: string
-  SubsPath?: string
+interface ILockData {
+  until: number
+  hide?: boolean
+}
 
-  Seasons?: number
-  Episodes?: number[]
+interface IVideoImageData {
+  poster?: string
+  cover?: string
 
-  MetaTitle: string
-  MetaDesc?: string
+  thumbnail: string
+}
 
-  IsTrailer?: boolean
-  LockedUntil?: number
+interface IVideoMiscData {
+  video?: string
+  subs?: string
 
-  HideIfLocked?: boolean
-  TotalRuntime: number
+  pinned?: boolean
+  upcoming?: boolean
+}
 
-  TrailerUrl?: string
-  EpisodesData?: IEpisodeDataV2[][]
+interface IVideoData {
+  _id: string
+
+  addedAt?: number
+  available?: boolean
+
+  series?: ISeriesData
+  meta: IVideoMeta
+
+  trailer?: ITrailerData
+  lock?: ILockData
+  
+  runtime?: number
+  images?: IVideoImageData
+
+  misc?: IVideoMiscData
 }
 
 export type {
-  IVideoData, // remove soon
-  IVideoDataV2,
+  ISeriesData,
+  IEpisodeData,
 
-  IEpisodeDataV2
+  IVideoMeta,
+  ITrailerData,
+
+  ILockData,
+  IVideoData,
+
+  IVideoImageData,
+  IVideoMiscData
 }

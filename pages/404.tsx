@@ -1,7 +1,7 @@
 import { Result } from 'antd'
 
 const Page404 = () => (
-  <div className='flex col wrap'>
+  <div>
     <div>
       <Result
         status="404"

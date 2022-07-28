@@ -36,3 +36,6 @@ yarn-error.log*
 
 # images
 public/images
+
+# Ignore next config
+next.config.js

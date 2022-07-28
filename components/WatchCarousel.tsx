@@ -1,9 +1,8 @@
 import { Carousel } from 'react-responsive-carousel'
 import Image from 'next/image'
 
-import V2CarouselCss from '../styles/v2/carousel.module.css'
 import {
-  IVideoDataV2
+  IVideoData
 } from '../src/types'
 
 import { Tag } from 'antd'
@@ -13,9 +12,9 @@ import { convertMsToStringTime } from '../src/utils'
 
 const WatchCarousel = (
   props: {
-    videos: IVideoDataV2[],
+    videos: IVideoData[],
     header: React.ReactNode,
-    onClickPlay: (video: IVideoDataV2) => any
+    onClickPlay: (video: IVideoData) => any
   }
 ) => (
   <div
@@ -25,16 +24,18 @@ const WatchCarousel = (
         flexDirection: 'column',
 
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+
+        textAlign: 'center',
       }
     }
   >
-    <>
+    <div className='header'>
       {props.header}
-    </>
+    </div>
 
     <div
-      className={V2CarouselCss['carousel-container']}
+      className='carousel-container'
     >
       <Carousel
         showArrows
@@ -51,21 +52,15 @@ const WatchCarousel = (
                 key={index}
               >
                 <Image
-                  src={video.ThumbnailUrl ?? ''}
+                  src={video.images?.thumbnail ?? ''}
                   width={1920}
                   height={1080}
                 />
 
                 <div
-                  className={
-                    V2CarouselCss['carousel-item-data']
-                  }
+                  className='carousel-item-data'
                 >
-                  <div
-                    className={
-                      V2CarouselCss['carousel-item-text']
-                    }
-                  >
+                  <div className='carousel-item-text'>
                     <div
                       style={
                         {
@@ -78,19 +73,17 @@ const WatchCarousel = (
                       }
                     >
                       <div>
-                        {video.MetaTitle}
+                        {video.meta.title}
                       </div>
 
                       <Tag
                         color={
-                          video.IsSeries ? 'red' : 'blue'
+                          video.series ? 'red' : 'blue'
                         }
-                        className={
-                          V2CarouselCss['carousel-item-tag']
-                        }
+                        className='carousel-item-tag'
                       >
                         {
-                          video.IsSeries ?
+                          video.series ?
                             'Series' :
                             'Movie'
                         }
@@ -98,22 +91,18 @@ const WatchCarousel = (
                     </div>
 
                     <div>
-                      {convertMsToStringTime(video.TotalRuntime)}
+                      {convertMsToStringTime(video.runtime || 0)}
                     </div>
                   </div>
 
                   <div
-                    className={
-                      V2CarouselCss['carousel-item-button']
-                    }
+                    className='carousel-item-button'
                   >
                     <PlayCircleFilled
                       onClick={
                         () => props.onClickPlay(video)
                       }
-                      className={
-                        V2CarouselCss['carousel-play-button']
-                      }
+                      className='carousel-play-button'
                     />
                   </div>
                 </div>

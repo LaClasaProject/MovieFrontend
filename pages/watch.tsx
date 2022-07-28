@@ -1,309 +1,248 @@
-import type { NextPage } from 'next'
-import fetch from 'node-fetch'
+import { NextPage } from 'next'
+import {
+  IVideoData
+} from '../src/types'
 
-import { IVideoData } from '../src/types'
+import WatchCarousel from '../components/WatchCarousel'
+import { useRef, useState } from 'react'
 
-import { Dispatch, SetStateAction, useState, useEffect } from 'react'
+import Button from '../components/Button'
 import SkeletonImage from '../components/SkeletonImage'
 
-import {
-  Modal,
-  Tag,
-  Dropdown,
-  Button,
-  Menu
-} from 'antd'
+import MovieDrawer from '../components/MovieDrawer'
 
-import type { MenuProps } from 'antd'
-import { DownOutlined } from '@ant-design/icons'
+const reqUrl = `${process.env.API_HOST}/videos`
 
 interface IApiVideoData {
   videos: IVideoData[]
+  upcoming: IVideoData[]
+  pinned: IVideoData[]
 }
 
-const VideoPage: NextPage<IApiVideoData> = (props) => {
-  const videoDialogStates: {
-    [key: string]: [boolean, Dispatch<SetStateAction<boolean>>]
-  } = {}
+const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
+  const [video, setVideo] = useState<IVideoData | null>(null),
+    videoRef = useRef() as any,
+    [season, setSeason] = useState<number>(0),
+    [page, setPage] = useState<number>(1),
+    [videosInPage, setVideosInPage] = useState<IVideoData[]>(videos)
 
-  const [currSeason, setCurrSeason] = useState<{
-      season: number
-      episodes: number
-      id: string
-    } |
-    null
-  >(null)
+  const getVideos = async (page: number, limit = 10) => {
+    const skip = (page - 1) * limit,
+      videos: IVideoData[] = (
+        await (
+          await fetch(`${reqUrl}?skip=${skip}&limit=${limit}`)
+        ).json() as any
+      ).data ?? []
 
-  const closeModal = (videoId: string) => {
-    videoDialogStates[videoId][1](false)
-    setCurrSeason(null)
-  }
-
-  const onClickMenu: MenuProps['onClick'] = (props) => {
-    const [
-      id,
-      season,
-      episodes
-    ] = props.key.split('_')
-
-    setCurrSeason(
-      {
-        id,
-        season: Number(season),
-        episodes: Number(episodes)
-      }
-    )
+    return videos
   }
 
   return (
-    <div className='flex col wrap'>
-      <h1 className='header'>
-        Collection of Movies & Series
-      </h1>
-
-      <div className='movie parent'>
+    <div
+      style={
         {
-          props.videos.map(
-            (video, key) => {
-              videoDialogStates[video.VideoId] = useState(false)
+          display: 'flex',
+          flexDirection: 'column',
 
-              return (
-                <div key={key}>
-                  {
-                    videoDialogStates[video.VideoId][0] ? (
-                      <Modal
-                        visible={
-                          videoDialogStates[video.VideoId][0]
-                        }
-                        onOk={
-                          () => {
-                            closeModal(video.VideoId)
-                          }
-                        }
-                        onCancel={
-                          () => {
-                            closeModal(video.VideoId)
-                          }
-                        }
-                        style={
-                          {
-                            maxWidth: '480px'
-                          }
-                        }
-                      >
-                        <div
-                          className='flex col wrap'
-                          style={
-                            {
-                              justifyContent: 'center',
-                              alignItems: 'center'
-                            }
-                          }
-                        >
-                          <div>
-                            <h2 className='header'>
-                              {video.MetaTitle}
-                            </h2>
-                          </div>
+          gap: '50px',
+          justifyContent: 'center',
 
-                          <div>
-                            <SkeletonImage
-                              width={240}
-                              height={120}
-                              src={video.CoverUrl}
-                              alt={`${video.MetaTitle} cover photo.`}
-                            />
-                          </div>
-                        </div>
+          alignItems: 'center'
+        }
+      }
+    >
+      <WatchCarousel
+        videos={pinned}
+        header={
+          (
+            <h2>
+              Featured Shows & Movies
+            </h2>
+          )
+        }
+        onClickPlay={
+          (video) => setVideo(video)
+        }
+      />
+      
+      <WatchCarousel
+        videos={upcoming}
+        header={
+          (
+            <h2>
+              Upcoming Shows & Movies
+            </h2>
+          )
+        }
+        onClickPlay={
+          (video) => setVideo(video)
+        }
+      />
 
-                        <div>
-                          {video.MetaDesc}
-                        </div>
+      <MovieDrawer
+        video={video as IVideoData}
+        onClose={
+          () => {
+            setVideo(null)
+            setSeason(0)
 
-                        <div
-                          className='flex row wrap'
-                          style={
-                            {
-                              gap: '6px'
-                            }
-                          }
-                        >
-                          <div>
-                            <h3>
-                              Available Seasons
-                            </h3>
-                          </div>
+            videoRef?.current.pause()
+          }
+        }
+        videoRef={videoRef}
+        season={season}
+        onMenuClick={
+          (menu) => setSeason(
+            Number(menu.key)
+          )
+        }
+      />
 
-                          <div
-                            style={
-                              {
-                                marginTop: '3px'
-                              }
-                            }
-                          >
-                            {
-                              video.IsAvailable ? (
-                                <Tag
-                                  color='success'
-                                >
-                                  Available
-                                </Tag>
-                              ) : (
-                                <Tag
-                                  color='error'
-                                >
-                                  Unavailable
-                                </Tag>
-                              )
-                            }
-                          </div>
-                        </div>
+      <div
+        style={
+          {
+            display: 'flex',
+            flexDirection: 'column',
 
-                        <div
-                          className='flex col wrap'
-                          style={
-                            {
-                              gap: '10px'
-                            }
-                          }
-                        >
-                          <div>
-                            <Dropdown
-                              disabled={!video.IsAvailable}
-                              overlay={
-                                <Menu
-                                  onClick={onClickMenu}
-                                  items={
-                                    (
-                                      () => {
-                                        const seasons = [],
-                                          seasonCount = video.Seasons ?? 0
-          
-                                        for (let i = 0; i < seasonCount; i++)
-                                          seasons.push(
-                                            {
-                                              label: `Season ${i + 1}`,
-                                              key: video.VideoId + '_' + (i + 1 ) + '_' + video.Episodes?.data[i] ?? 0
-                                            }
-                                          )
-                                        
-                                        return seasons
-                                      }
-                                    )()
-                                  }
-                                />
-                              }
-                            >
-                              <Button
-                                icon={
-                                  <DownOutlined />
-                                }
-                              >
-                                {
-                                  currSeason?.season ? (
-                                    `Season ${currSeason.season}`
-                                  ) : 'Select Season'
-                                }
-                              </Button>
-                            </Dropdown>
-                          </div>
+            flexWrap: 'wrap',
+            justifyContent: 'center',
 
-                          {
-                            currSeason !== null && currSeason.id === video.VideoId ? (
-                              () => {
-                                const elements = []
+            alignItems: 'center',
+            gap: '5px'
+          }
+        }
+      >
+        <h2 className='header'>
+          Shows and Movies
+        </h2>
 
-                                for (let i = 0; i < currSeason.episodes; i++)
-                                  elements.push(
-                                    <Button
-                                      key={i}
-                                      onClick={
-                                        () => window.location.href=`/watch/${video.VideoId}?s=${currSeason.season}&e=${i + 1}`
-                                      }
-                                    >
-                                      {
-                                        `Episode ${(i + 1).toString()}`
-                                      }
-                                    </Button>
-                                  )
+        { /* Dispaly videos here*/ }
+        <div
+          style={
+            {
+              display: 'flex',
+              flexDirection: 'row',
 
-                                return (
-                                  <div
-                                    className='flex row wrap'
-                                    style={
-                                      {
-                                        gap: '5px'
-                                      }
-                                    }
-                                  >
-                                    {elements}
-                                  </div>
-                                )
-                              }
-                            )() : null
-                          }
-                        </div>
-                      </Modal>
-                    ) : null
-                  }
-  
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              gap: '10px',
+              flexWrap: 'wrap',
+
+              maxWidth: `${170 * 5 + (170 / 2)}px`
+            }
+          }
+        >
+          {
+            videosInPage.length < 1 ? (
+              'Nothing to see here'
+            ) : (
+              videosInPage.map(
+                (video, key) => (
                   <div
-                    className='container'
+                    key={key}
+                    className='poster-container'
                   >
                     <div className='poster'>
                       <SkeletonImage
                         style={
-                          !video.IsSeries && !video.IsAvailable ? (
+                          video.lock && Date.now() < video.lock.until ? (
                             {
                               cursor: 'not-allowed',
                               filter: 'grayscale(100%)'
                             }
                           ) : undefined
                         }
-                        width={220}
-                        height={340}
-                        src={video.PosterUrl ?? ''}
-                        alt={video.MetaTitle}
+                        width={170}
+                        height={250}
+                        src={video.images?.poster ?? ''}
+                        alt={video.meta.title}
                         onClick={
-                          () => {
-                            if (!video.IsSeries) {
-                              if (!video.IsAvailable) return
-                              window.location.href = `/watch/${video.VideoId}`
-                            } else
-                              videoDialogStates[video.VideoId][1](true)
-                          }
+                          () => setVideo(video)
                         }
                       />
-                    </div> 
+                    </div>
                   </div>
-                </div>
+                )          
               )
+            )
+          }
+        </div>
+
+        <div
+          style={
+            {
+              display: 'flex',
+              flexDirection: 'row',
+              
+              gap: '10px',
+              flexWrap: 'wrap',
+
+              marginBottom: '10px'
             }
-          )
-        }
+          }
+        >
+          <Button
+            disabled={page <= 1}
+            color='red'
+            onClick={
+              async () => {
+                if (page <= 1) return
+
+                setPage(page - 1)
+                const videos = await getVideos(page - 1)
+
+                setVideosInPage(videos)
+              }
+            }
+          >
+            Previous
+          </Button>
+          <Button
+            disabled={videosInPage.length < 10}
+            color='green'
+            onClick={
+              async () => {
+                if (videosInPage.length < 10) return
+
+                setPage(page + 1)
+                const videos = await getVideos(page + 1)
+
+                setVideosInPage(videos)
+              }
+            }
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   )
 }
 
-const getServerSideProps = async () => {
-  let res: { data: IVideoData[], code?: number }
-
-  try {
-    res = await (
-      await fetch(`${process.env.API_HOST}/videos`)
-    )?.json() as any
-  } catch(err) {
-    res = { data: [] }
-  }
+export const getServerSideProps = async () => {
+  const videos: IVideoData[] = (
+      await (
+        await fetch(`${reqUrl}?limit=10`)
+      ).json()
+    ).data ?? [],
+  misc: IVideoData[] = (
+      await (
+        await fetch(`${reqUrl}?pinned=true&upcoming=true`)
+      ).json()
+    ).data ?? []
 
   return {
     props: {
-      videos: res.data
+      videos,
+      upcoming: misc.filter(
+        (vid) => vid.misc?.upcoming
+      ),
+      pinned: misc.filter(
+        (vid) => vid.misc?.pinned
+      )
     }
   }
 }
 
-export { getServerSideProps }
-
-export default VideoPage
+export default WatchPage

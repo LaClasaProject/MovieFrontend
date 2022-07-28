@@ -9,9 +9,9 @@ This requires the backend server to be online as that's where it gets the videos
       - [x] Part 1.
       - [x] Part 2. `/watch/:id`
     - [x] Slowly convert to v2 design
-      - [ ] Separate pages with versioning (temporary).
       - [ ] Implement custom video player.
-      - [ ] Get rid of sass.
+      - [x] Get rid of sass.
+      - [ ] Ready for v2-beta.
 
   ### User Related Features
   - [ ] User Login/Signup system.

@@ -1,0 +1,17 @@
+.menu-design {
+  max-width: 120px;
+}
+
+.episode-info {
+  border-top: 1px solid #3f3f3f;
+  padding: 10px;
+
+  transition: ease-in-out;
+  transition-duration: .2s;
+
+  cursor: pointer;
+}
+
+.episode-info:hover {
+  background-color: #4f4f4f;
+}

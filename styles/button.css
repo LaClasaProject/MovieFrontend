@@ -1,0 +1,48 @@
+.btn, .btn:active {
+  color: black;
+  background-color: #ffffff;
+  
+  border: none;
+  font-family: 'Bebas Neue';
+  
+  font-size: 20px;
+  border-radius: 8px;
+
+  transition: ease-in-out;
+  transition-duration: .2s;
+
+  cursor: pointer;  
+  text-align: center;
+
+  padding-top: 5px;
+  padding-bottom: 3px;
+
+  padding-left: 15px;
+  padding-right: 15px;
+
+  user-select: none;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 3px #292929;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn.cyan {
+  background-color: #60afff;
+  color: white;
+}
+
+.btn.green {
+  background-color: #31de4b;
+  color: white;
+}
+
+.btn.red {
+  background-color: #ff5757;
+  color: white;
+}
