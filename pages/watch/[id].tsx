@@ -15,6 +15,7 @@ const WatchVideo = (
     [currSeason, setCurrSeason] = useState(Number(props.season)),
     [currEpisode, setCurrEpisode] = useState(Number(props.episode)),
     [videoTitle, setVideoTitle] = useState(''),
+    [captions, setCaptions] = useState(''),
     buildVideoUrl = () => {
       if (props.data?.misc?.upcoming) {
         if (props.data?.trailer?.show)
@@ -62,17 +63,25 @@ const WatchVideo = (
           setCurrEpisode(1)
         }
       } setCurrEpisode(currEpisode + 1)  // not at the last episode of the season
+    },
+    getCaptions = () => {
+      const subPath = `/S${currSeason}/${currEpisode}`
+      if (!props.data?.series)
+        return props.data?.misc?.subs ?? ''
+      else return (props.data?.misc?.subs ?? '') + subPath
     }
 
   useEffect(
     () => {
       const url = buildVideoUrl(),
-        title = getVideoTitle() ?? ''
+        title = getVideoTitle() ?? '',
+        captions = getCaptions()
                 
       setVideoUrl(url)
       setVideoTitle(title)
+      setCaptions(captions)
     },
-    [currEpisode, currSeason]
+    [currEpisode, currSeason, captions]
   )
 
   return (
@@ -84,7 +93,7 @@ const WatchVideo = (
         title={videoTitle}
         onPrevious={onPrevious}
         onNext={onNext}
-        captions={props.data?.misc?.subs}
+        captions={captions}
       />
     </div>
   )  
