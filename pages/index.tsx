@@ -38,7 +38,7 @@ const HomePage = () => (
       This part of the website, which includes the login page is still under maintenance.
       You can watch shows and movies on this
 
-      <a href='/watch'> link</a>:
+      <a href='/watch'> link</a>
     </div>
 
   </div>

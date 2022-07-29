@@ -1,5 +1,7 @@
 // Types from MovieBackend
 
+import { MutableRefObject } from 'react'
+
 interface IEpisodeData {
   title: string
   desc?: string
@@ -60,6 +62,30 @@ interface IVideoData {
   misc?: IVideoMiscData
 }
 
+interface ICustomVideoProps {
+  src: string
+  autoFullScreen?: boolean
+
+  className?: string
+
+  autoPlay?: boolean
+  videoProps?: JSX.IntrinsicElements['video']
+
+  noPip?: boolean
+  videoRef?: MutableRefObject<any>
+
+  width?: number
+  height?: number
+
+  noBackButton?: boolean
+  title?: string
+
+  subtitle?: string  
+  onNext?: () => void
+  
+  onPrevious?: () => void
+}
+
 export type {
   ISeriesData,
   IEpisodeData,
@@ -71,5 +97,7 @@ export type {
   IVideoData,
 
   IVideoImageData,
-  IVideoMiscData
+  IVideoMiscData,
+
+  ICustomVideoProps
 }

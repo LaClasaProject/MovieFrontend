@@ -10,6 +10,7 @@ import { CaretRightFilled, DownOutlined } from '@ant-design/icons'
 import Router from 'next/router'
 
 import { MenuInfo } from 'rc-menu/lib/interface'
+import Video from './Video'
 
 const MovieDrawer = (
   { video, onClose, videoRef, season, onMenuClick }: {
@@ -50,12 +51,13 @@ const MovieDrawer = (
             }
           >
             <div>
-              <video
-                onContextMenu={(e) => e.preventDefault()}
+              <Video
                 ref={videoRef}
                 autoPlay
-                src={video?.trailer?.url}
-                disablePictureInPicture
+                src={video?.trailer?.url ?? ''}
+                noPip
+                className='responsive-video'
+                noBackButton
               />
             </div>
       
@@ -160,7 +162,11 @@ const MovieDrawer = (
                                         onClick={
                                           () => {
                                             Router.push(
-                                              `/watch/${video._id}?s=${season}&e=${key + 1}`
+                                              season === 1 && key + 1 === 1 ? (
+                                                `/watch/${video._id}`
+                                              ) : (
+                                                `/watch/${video._id}?s=${season}&e=${key + 1}`
+                                              )
                                             )
                                           }
                                         }

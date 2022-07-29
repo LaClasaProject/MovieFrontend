@@ -10,8 +10,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@types/react-slick": "^0.23.10",
+    "@types/fscreen": "^1.0.1",
     "antd": "^4.21.6",
+    "fscreen": "^1.2.0",
     "moment": "^2.29.4",
     "next": "12.2.0",
     "react": "18.2.0",

@@ -11,7 +11,7 @@ const nextConfig = {
 
   images: {
     domains: [
-      'example.com'
+      'media.crackedflix.live'
     ]
   }
 }
