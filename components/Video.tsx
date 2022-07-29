@@ -526,11 +526,12 @@ const Video = forwardRef(
           onPlay={() => setPaused(false)}
 
           onCanPlay={() => play()}
+          crossOrigin='anonymous'
         >
           { /* todo add option for subtitles */ }
           <track
             default
-            src={(props.subtitle ?? '') + '/english.vtt'}
+            src={(props.captions ?? '') + '/english.vtt'}
             kind='captions'
             srcLang='en'
           />

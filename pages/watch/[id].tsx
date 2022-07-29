@@ -34,19 +34,16 @@ const WatchVideo = (
         return `S${currSeason}:E${currEpisode} "` + (
           props.data?.series.episodes[currSeason - 1][currEpisode - 1]?.title ?? ''
         ).trim() + '"'
-      else props.data?.meta.title
+      else return props.data?.meta.title
     },
     onPrevious = () => {
       const seasonIndex = currSeason - 1,
         episodeIndex = currEpisode - 1,
-        seasons = props.data?.series?.episodes ?? [],
-        season = seasons[seasonIndex] ?? []
+        seasons = props.data?.series?.episodes ?? []
 
       if (episodeIndex < 1) { // at the first episode of the season
         if (seasonIndex < 1) return // at the first season
         else {
-          console.log('ree')
-
           setCurrSeason(currSeason - 1)
           setCurrEpisode(seasons[seasonIndex - 1].length - 1) // get last episode index
         }
@@ -87,7 +84,7 @@ const WatchVideo = (
         title={videoTitle}
         onPrevious={onPrevious}
         onNext={onNext}
-        subtitle={props.data?.misc?.subs}
+        captions={props.data?.misc?.subs}
       />
     </div>
   )  

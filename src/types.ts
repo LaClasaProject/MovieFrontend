@@ -81,8 +81,9 @@ interface ICustomVideoProps {
   title?: string
 
   subtitle?: string  
+  captions?: string
+
   onNext?: () => void
-  
   onPrevious?: () => void
 }
 

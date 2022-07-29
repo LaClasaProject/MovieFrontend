@@ -18,7 +18,9 @@ const MovieApp = (
 ) => (
   <>
     <Head>
-      <title>Movies & Series</title>
+      <title>
+        {process.env.SITE_TITLE}
+      </title>
     </Head>
 
     <Component {...pageProps} />
