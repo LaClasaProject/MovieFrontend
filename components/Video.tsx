@@ -16,6 +16,7 @@ import fscreen from 'fscreen'
 import {
   ArrowLeftOutlined,
   CaretRightFilled,
+  CopyrightOutlined,
   DoubleLeftOutlined,
   DoubleRightOutlined,
   FullscreenExitOutlined,
@@ -36,10 +37,12 @@ const Video = forwardRef(
       [controlsShown, setControlsShown] = useState(false),
       videoRef = useRef<HTMLVideoElement>(),
       [currentTime, setCurrentTime] = useState(0),
-      containerRef = useRef<HTMLElement>(),
-      [inFullScreen, setInFullScreen] = useState(false),
       [paused, setPaused] = useState(true),
-      [volume, setVolume] = useState(1)
+      [volume, setVolume] = useState(1),
+      [isFullScreen, setIsFullScreen] = useState(false),
+      [caption, setCaption] = useState(''),
+      [captionsOn, setCaptionsOn] = useState(true),
+      containerRef = useRef()
 
     const getVideo = () => {
         const video = videoRef.current
@@ -111,13 +114,13 @@ const Video = forwardRef(
           try { await video.play() } catch {}
       },
       onDoubleClick = () => {
-        const container = containerRef?.current
-        if (container)
-          if (inFullScreen)
-            fscreen.exitFullscreen()
-          else fscreen.requestFullscreen(container)
+        const container = props.autoFullScreen ? document.body : containerRef.current
+        if (!container) return
+
+        if (document.fullscreenElement)
+          fscreen.exitFullscreen()
+        else fscreen.requestFullscreen(container)
       },
-      onFullScreenChange = () => setInFullScreen(!inFullScreen),
       onKeyboardPress = (ev: any) => {
         const video = getVideo()
         if (!video) return
@@ -159,18 +162,15 @@ const Video = forwardRef(
       onClickFullScreen = () => {
         if (!controlsShown) return
         onDoubleClick()
-      }
-
-    useEffect(
-      () => {
-        const container = containerRef.current
-        if (!container) return
-
-        container.addEventListener('fullscreenchange', onFullScreenChange)
-        return () => container.removeEventListener('fullscreenchange', onFullScreenChange)
       },
-      [inFullScreen]
-    )
+      textTrackRef = useRef<HTMLTrackElement>(),
+      onCueChange = (ev: any) => {
+        const elem = ev.target as HTMLTrackElement,
+          cue = (elem.track?.activeCues ?? [])[0] as any
+
+        setCaption(cue?.text ?? '')
+      },
+      onToggleCaptions = () => setCaptionsOn(!captionsOn)
 
     useEffect(
       () => {
@@ -180,6 +180,26 @@ const Video = forwardRef(
         video.volume = volume
       },
       [volume]
+    )
+
+    useEffect(
+      () => {
+        if (document)
+          setIsFullScreen(!!document.fullscreenElement)
+
+        const track = textTrackRef.current
+        if (!track) return
+
+        track.addEventListener(
+          'cuechange',
+          onCueChange
+        )
+
+        return () => {
+          track.removeEventListener('cuechange', onCueChange)
+        }
+      },
+      []
     )
 
     useImperativeHandle(
@@ -211,11 +231,11 @@ const Video = forwardRef(
             setLastMouseMove(Date.now())
           }
         }
+        ref={containerRef as any}
         onKeyDown={
           (ev) => onKeyboardPress(ev)
         }
         tabIndex={0}
-        ref={containerRef as any}
         className='video-content'
         style={
           {
@@ -237,6 +257,23 @@ const Video = forwardRef(
         }
         onMouseMove={onMouseMove}
       >
+        {/* subtitle */}
+        <div
+          className='captions'
+          style={
+            {
+              fontSize: '32px',
+              paddingBottom: controlsShown ? '60px' : '0px',
+
+              transition: 'ease-in-out .2s'
+            }
+          }
+        >
+          {
+            captionsOn ? <pre>{caption}</pre> : null
+          }
+        </div>
+
         { /* controls */ }
         <div
           style={
@@ -248,90 +285,54 @@ const Video = forwardRef(
               width: '100%',
               height: '100%',
 
-              opacity: controlsShown ? 1 : 0,
-              transition: 'ease-in-out .2s'
+              transition: 'ease-in-out .2s',
+              opacity: Number(controlsShown)
             }
           }
         >
-          {
-            props.noBackButton ? null : (
+          <div
+            className='flex row top-controls w-100'
+            style={{ position: 'absolute' }}
+          >
+            {
+              props.noBackButton ? null : (
+                <div>
+                  <ArrowLeftOutlined
+                    className='back-button'
+                    onClick={onBackButton}
+                  />
+                </div>
+              )
+            }
+
+            <div className='flex col center w-100'>
               <div
                 style={
                   {
-                    position: 'absolute',
-                    fontSize: '32px',
+                    fontWeight: 'bold',
+                    fontSize: '20px',
 
-                    padding: '10px',
-                    cursor: 'pointer',
-
-                    zIndex: '2'
+                    textShadow: '2px 2px 3px #212121'
                   }
                 }
-                onClick={onBackButton}
               >
-                <ArrowLeftOutlined />
+                {props.title ?? ''}
               </div>
-            )
-          }
 
-          <div
-            style={
-              {
-                position: 'absolute',
-                display: 'flex',
-
-                flexDirection: 'column',
-                justifyContent: 'center',
-
-                alignItems: 'center',
-                width: '100%',
-                
-                marginTop: '5px'
-              }
-            }
-          >
-            <div
-              style={
-                {
-                  fontWeight: 'bold',
-                  fontSize: '20px',
-
-                  textShadow: '2px 2px 3px #212121'
+              <div
+                style={
+                  {
+                    fontSize: '14px',
+                    color: '#858585'
+                  }
                 }
-              }
-            >
-              {props.title ?? ''}
-            </div>
-
-            <div
-              style={
-                {
-                  fontSize: '14px',
-                  color: '#858585'
-                }
-              }
-            >
-              {props.subtitle ?? ''}
+              >
+                {props.subtitle ?? ''}
+              </div>
             </div>
           </div>
 
-          <div
-            style={
-              {
-                display: 'flex',
-                flexDirection: 'row',
-
-                alignItems: 'center',
-                justifyContent: 'center',
-
-                height: '100%',
-                flexWrap: 'wrap',
-
-                fontSize: '32px',
-                gap: '10px'
-              }
-            }
-          >
+          <div className='flex row center h-100 mid-controls'>
             <div>
               <DoubleLeftOutlined onClick={onPressSeekLeft} />
             </div>
@@ -349,161 +350,132 @@ const Video = forwardRef(
             </div>
           </div>
 
-          <div
-            style={
-              {             
-                display: 'flex',
-                flexDirection: 'row', 
-
-                position: 'absolute',
-                width: '100%',
-
-                bottom: 0,
-                gap: '10px',
-
-                justifyContent: 'center',
-                alignItems: 'center',
-
-                padding: '0px 20px 0px'
-              }
-            }
-          >
+          <div className='absolute-bottom bottom-controls'>
             <div
-              style={
-                {
-                  display: 'flex',
-                  flexDirection: 'row',
-
-                  flexWrap: 'nowrap',
-                  gap: '5px'
-                }
-              }
+              className='flex row center'
+              style={{ paddingLeft: '5px', paddingRight: '5px' }}
             >
-              <div>
-                {formatNum(currentTime)}
-              </div>
-
-              <div>/</div>
-
-              <div>
-                {formatNum(videoRef?.current?.duration)}
-              </div>
-            </div>
-
-            <div
-              style={
-                {
-                  display: 'flex',
-                  flexDirection: 'row',
-
-                  flexWrap: 'nowrap',
-                  gap: '5px',
-
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }
-              }
-            >
-              <div style={{ fontSize: '24px' }}>
-                <SoundOutlined/>
-              </div>
-
-              <div style={{ width: '80px' }}>
+              <div className='w-100'>
                 <Slider
                   min={0}
-                  max={1}
+                  max={videoRef.current?.duration}
                   step={0.1}
-                  value={volume}
-                  onChange={(val) => setVolume(val)}
-                  trackStyle={{ backgroundColor: '#4593ff' }}
-                  handleStyle={{ backgroundColor: '#4593ff' }}
-                />
-              </div>
-
-              
-            </div>
-
-            <div
-              style={
-                { width: '100%' }
-              }
-            >
-              <Slider 
-                min={0}
-                max={videoRef.current?.duration}
-                step={0.1}
-                value={currentTime}
-                onChange={onSeek}
-                onAfterChange={afterSeek}
-                trackStyle={
-                  { backgroundColor: '#a13cff' }
-                }
-                handleStyle={
-                  { backgroundColor: '#a13cff' }
-                }
-                tooltipPlacement='top'
-                tipFormatter={
-                  (val: number = 0) => {
-                    const formatted = moment.utc(val * 1000)
-                      .format('HH:mm:ss')
-
-                    return (
-                      <>
-                        {formatted}
-                      </>
-                    )
+                  value={currentTime}
+                  onChange={onSeek}
+                  onAfterChange={afterSeek}
+                  trackStyle={{ backgroundColor: '#a13cff' }}
+                  handleStyle={{ backgroundColor: '#a13cff' }}
+                  tooltipPlacement='top'
+                  tipFormatter={
+                    (val: number = 0) => {
+                      const formatted = moment.utc(val * 1000)
+                        .format('HH:mm:ss')
+  
+                      return (
+                        <>
+                          {formatted}
+                        </>
+                      )
+                    }
                   }
-                }
-              />
-            </div>
-
-            <div
-              style={
-                {
-                  fontSize: '32px',
-                  display: 'flex',
-
-                  flexDirection: 'row',
-                  gap: '10px'
-                }
-              }
-            >
-              <div
-                style={{ cursor: !!props.onPrevious ? 'pointer' : 'not-allowed' }}
-              >
-                <VerticalRightOutlined
-                  onClick={props.onPrevious}
                 />
               </div>
 
               <div
-                style={{ cursor: !!props.onNext ? 'pointer' : 'not-allowed' }}
+                className='flex row'
+                style={{ gap: '5px' }}
               >
-                <VerticalLeftOutlined onClick={props.onNext} />
+                <div>
+                  {formatNum(currentTime)}
+                </div>
+
+                <div>/</div>
+
+                <div>
+                  {formatNum(videoRef?.current?.duration)}
+                </div>
+              </div>
+            </div>
+
+            <div
+              className='flex row center extra-controls'
+              style={{ fontSize: '28px', gap: '15px' }}
+            >
+              <div className='flex row center'>
+                <div><SoundOutlined style={{ cursor: 'pointer' }} /></div>
+                <div>
+                  <Slider
+                    style={{ width: '80px' }}
+                    min={0}
+                    max={1}
+                    step={0.1}
+                    value={volume}
+                    onChange={(val) => setVolume(val)}
+                    trackStyle={{ backgroundColor: '#4593ff' }}
+                    handleStyle={{ backgroundColor: '#4593ff' }}
+                  />
+                </div>
               </div>
 
               <div>
+                <Tooltip title='Previous Episode'>
+                  <VerticalRightOutlined
+                    style={{ cursor: !!props.onPrevious ? 'pointer' : 'not-allowed' }}
+                    onClick={props.onPrevious}
+                  />
+                </Tooltip>
+              </div>
+
+              <div>
+                <Tooltip title='Next Episode'>
+                  <VerticalLeftOutlined
+                    style={{ cursor: !!props.onNext ? 'pointer' : 'not-allowed' }}
+                    onClick={props.onNext}
+                  />
+                </Tooltip>
+              </div>
+              
+              <div>
                 {
-                  inFullScreen ? (
+                  isFullScreen ? (
                     <FullscreenExitOutlined onClick={onClickFullScreen} />
-                  ) : <FullscreenOutlined onClick={onClickFullScreen} />
+                  ) : (
+                    <FullscreenOutlined onClick={onClickFullScreen} />
+                  )
                 }
+              </div>
+
+              <div
+                className='flex row center'
+                style={{ gap: '5px', cursor: 'pointer' }}
+                onClick={onToggleCaptions}
+              >
+                <div>
+                  <CopyrightOutlined />
+                </div>
+
+                <div
+                  style={{ fontSize: '14px', }}
+                >
+                  {captionsOn ? (
+                    <s>Captions</s>
+                  ) : 'Captions'}
+                </div>
               </div>
             </div>
           </div>
-
         </div>
-
+        
         <video
           {...props.videoProps}
 
-          src={props.src}
           style={
             {
-              opacity: controlsShown ? .8 : 1,
-              transition: 'ease-in-out .2s'
+              transition: 'ease-in-out .2s',
+              opacity: controlsShown ? .7 : 1
             }
           }
+          src={props.src}
 
           autoPlay={props.autoPlay}
           className={
@@ -526,10 +498,10 @@ const Video = forwardRef(
           onPlay={() => setPaused(false)}
 
           onCanPlay={() => play()}
-          crossOrigin='anonymous'
         >
           { /* todo add option for subtitles */ }
           <track
+            ref={textTrackRef as any}
             default
             src={(props.captions ?? '') + '/english.vtt'}
             kind='captions'

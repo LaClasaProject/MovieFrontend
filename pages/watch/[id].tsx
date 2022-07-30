@@ -4,6 +4,8 @@ import { IVideoData } from '../../src/types'
 import Video from '../../components/Video'
 import { useEffect, useState } from 'react'
 
+import Router from 'next/router'
+
 const WatchVideo = (
   props: {
     season: string
@@ -15,7 +17,6 @@ const WatchVideo = (
     [currSeason, setCurrSeason] = useState(Number(props.season)),
     [currEpisode, setCurrEpisode] = useState(Number(props.episode)),
     [videoTitle, setVideoTitle] = useState(''),
-    [captions, setCaptions] = useState(''),
     buildVideoUrl = () => {
       if (props.data?.misc?.upcoming) {
         if (props.data?.trailer?.show)
@@ -69,19 +70,42 @@ const WatchVideo = (
       if (!props.data?.series)
         return props.data?.misc?.subs ?? ''
       else return (props.data?.misc?.subs ?? '') + subPath
+    },
+    [captions, setCaptions] = useState(getCaptions()),
+    buildData = () => {
+      const url = buildVideoUrl(),
+        title = getVideoTitle() ?? ''
+                
+      setVideoUrl(url)
+      setVideoTitle(title)
+
+      setCaptions(getCaptions())
     }
 
   useEffect(
     () => {
-      const url = buildVideoUrl(),
-        title = getVideoTitle() ?? '',
-        captions = getCaptions()
-                
-      setVideoUrl(url)
-      setVideoTitle(title)
-      setCaptions(captions)
+      buildData()
     },
-    [currEpisode, currSeason, captions]
+    []
+  )
+  
+  useEffect(
+    () => {
+      buildData()
+
+      Router.push(
+        {
+          pathname: `/watch/${props.data?._id}`,
+          query: currSeason === 1 && currSeason === 1 ? {} : {
+            s: currSeason,
+            e: currSeason
+          }
+        },
+        undefined,
+        { shallow: true }
+      )
+    },
+    [currEpisode, currSeason]
   )
 
   return (
