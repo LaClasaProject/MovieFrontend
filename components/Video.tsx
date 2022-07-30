@@ -12,7 +12,7 @@ import {
 } from 'antd'
 import moment from 'moment'
 
-import fscreen from '../src/fscreen'
+import fscreen from 'fscreen'
 import {
   ArrowLeftOutlined,
   CaretRightFilled,
