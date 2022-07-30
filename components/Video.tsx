@@ -352,7 +352,7 @@ const Video = forwardRef(
 
           <div className='absolute-bottom bottom-controls'>
             <div
-              className='flex row center'
+              className='flex row center wrap'
               style={{ paddingLeft: '5px', paddingRight: '5px' }}
             >
               <div className='w-100'>
@@ -498,6 +498,7 @@ const Video = forwardRef(
           onPlay={() => setPaused(false)}
 
           onCanPlay={() => play()}
+          crossOrigin='anonymous'
         >
           { /* todo add option for subtitles */ }
           <track

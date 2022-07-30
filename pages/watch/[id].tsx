@@ -102,7 +102,7 @@ const WatchVideo = (
           }
         },
         undefined,
-        { shallow: true }
+        { shallow: false }
       )
     },
     [currEpisode, currSeason]
