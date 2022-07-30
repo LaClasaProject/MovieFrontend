@@ -22,6 +22,9 @@ const WatchVideo = (
       ) : ''
 
   const getVideoUrl = () => {
+    if (props.data.trailer?.show && props.data.trailer?.url)
+      return props.data.trailer?.url
+
     const series = props.data.series
 
     if (series) {
