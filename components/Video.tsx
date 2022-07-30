@@ -12,7 +12,7 @@ import {
 } from 'antd'
 import moment from 'moment'
 
-import fscreen from 'fscreen'
+import fscreen from '../src/fscreen'
 import {
   ArrowLeftOutlined,
   CaretRightFilled,
@@ -119,7 +119,7 @@ const Video = forwardRef(
 
         if (document.fullscreenElement)
           fscreen.exitFullscreen()
-        else fscreen.requestFullscreen(container)
+        else fscreen.requestFullscreenFunction(container)
       },
       onKeyboardPress = (ev: any) => {
         const video = getVideo()
