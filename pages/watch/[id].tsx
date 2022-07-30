@@ -91,8 +91,6 @@ const WatchVideo = (
   
   useEffect(
     () => {
-      buildData()
-
       Router.push(
         {
           pathname: `/watch/${props.data?._id}`,
