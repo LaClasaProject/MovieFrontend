@@ -66,7 +66,7 @@ const WatchVideo = (
       } setCurrEpisode(currEpisode + 1)  // not at the last episode of the season
     },
     getCaptions = () => {
-      const subPath = `/S${currSeason}/${currEpisode}`
+      const subPath = `/S${currSeason}/E${currEpisode}`
       if (!props.data?.series)
         return props.data?.misc?.subs ?? ''
       else return (props.data?.misc?.subs ?? '') + subPath
