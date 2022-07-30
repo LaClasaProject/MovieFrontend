@@ -1,125 +1,147 @@
 import { GetServerSidePropsContext } from 'next'
-import { IVideoData } from '../../src/types'
+import { ISeriesData, IVideoData } from '../../src/types'
 
 import Video from '../../components/Video'
 import { useEffect, useState } from 'react'
-
-import Router from 'next/router'
 
 const WatchVideo = (
   props: {
     season: string
     episode: string,
-    data?: IVideoData
+    data: IVideoData
   }
 ) => {
-  const [videoUrl, setVideoUrl] = useState<string | null>(null),
-    [currSeason, setCurrSeason] = useState(Number(props.season)),
-    [currEpisode, setCurrEpisode] = useState(Number(props.episode)),
+  const [currentEpisode, setCurrentEpisode] = useState(Number(props.episode)),
+    [currentSeason, setCurrentSeason] = useState(Number(props.season)),
+    [hasLoaded, setHasLoaded] = useState(false),
+    [videoUrl, setVideoUrl] = useState(''),
+    [captionUrl, setCaptionUrl] = useState(''),
     [videoTitle, setVideoTitle] = useState(''),
-    buildVideoUrl = () => {
-      if (props.data?.misc?.upcoming) {
-        if (props.data?.trailer?.show)
-          return props.data?.trailer.url
-        else return ''
-      } else {
-        const url = props.data?.misc?.video ?? ''
-        if (!url) return ''
+    videoSubtitle = props.data.series ? (
+        props.data.meta?.title ?? ''
+      ) : ''
 
-        if (props.data?.series)
-          return url + `/S${currSeason}/E${currEpisode}.mp4`
-        else return url + '/video.mp4'
-      }
+  const getVideoUrl = () => {
+    const series = props.data.series
+
+    if (series) {
+      return (props.data.misc?.video ?? '') +
+        `/S${currentSeason}/E${currentEpisode}` +
+        '.mp4'
+    } else return (props.data.misc?.video ?? '') + '/video.mp4'
+  },
+    getCaptionUrl = () => {
+      const subPath = `/S${currentSeason}/E${currentEpisode}`,
+        url = props.data.misc?.subs ?? ''
+
+      if (!props.data.series)
+        return url
+      else return url + subPath
     },
     getVideoTitle = () => {
-      if (props.data?.series)
-        return `S${currSeason}:E${currEpisode} "` + (
-          props.data?.series.episodes[currSeason - 1][currEpisode - 1]?.title ?? ''
-        ).trim() + '"'
-      else return props.data?.meta.title
-    },
-    onPrevious = () => {
-      const seasonIndex = currSeason - 1,
-        episodeIndex = currEpisode - 1,
-        seasons = props.data?.series?.episodes ?? []
+      if (!props.data.series) return props.data.meta?.title
+      else {
+        const pattern = 'S{season}:E{episode} "{title}"',
+          episode = props.data.series.episodes[currentSeason - 1][currentEpisode - 1]
 
-      if (episodeIndex < 1) { // at the first episode of the season
-        if (seasonIndex < 1) return // at the first season
-        else {
-          setCurrSeason(currSeason - 1)
-          setCurrEpisode(seasons[seasonIndex - 1].length - 1) // get last episode index
-        }
-      } else setCurrEpisode(currEpisode - 1) // not at the first episode
+        return pattern.replace(
+            '{season}',
+            currentSeason.toString()
+          )
+          .replace(
+            '{episode}',
+            currentEpisode.toString()
+              .padStart(2, '0')
+          )
+          .replace(
+            '{title}',
+            episode.title ?? ''
+          )
+      }
     },
-    onNext = () => {
-      const seasonIndex = currSeason - 1,
-        episodeIndex = currEpisode - 1,
-        seasons = props.data?.series?.episodes ?? [],
-        season = seasons[seasonIndex] ?? []
+    checkEpisodeValidity = (series: ISeriesData) => {
+      if (currentSeason >= series.seasons) return false
+      else {
+        const season = series.episodes[currentSeason - 1]
+        if (!season || !season[currentEpisode - 1]) return false
+        else return true
+      }
+    },
+    nextEpisode = () => {
+      const series = props.data.series
+      if (
+        !series || (
+          currentSeason >= series.seasons &&
+          currentEpisode >= series.episodes[currentSeason - 1].length
+        )
+      ) return // disallow movies, last episode at last season
 
-      if (episodeIndex >= season.length - 1) { // at the last episode of the season
-        if (seasonIndex >= seasons.length - 1) return // at the last season
-        else {
-          setCurrSeason(currSeason + 1)
-          setCurrEpisode(1)
-        }
-      } setCurrEpisode(currEpisode + 1)  // not at the last episode of the season
+      const season = series.episodes[currentSeason - 1]
+      if (currentEpisode >= season.length) { // last episode
+        setCurrentSeason(currentSeason + 1)
+        setCurrentEpisode(1)
+      } else setCurrentEpisode(currentEpisode + 1)
     },
-    getCaptions = () => {
-      const subPath = `/S${currSeason}/E${currEpisode}`
-      if (!props.data?.series)
-        return props.data?.misc?.subs ?? ''
-      else return (props.data?.misc?.subs ?? '') + subPath
-    },
-    [captions, setCaptions] = useState(getCaptions()),
-    buildData = () => {
-      const url = buildVideoUrl(),
-        title = getVideoTitle() ?? ''
-                
-      setVideoUrl(url)
-      setVideoTitle(title)
+    previousEpisode = () => {
+      const series = props.data.series
+      if (
+        !series || (
+          currentSeason <= 1 &&
+          currentEpisode <= 1
+        )
+      ) return // disallow movies, first episode at first season
 
-      setCaptions(getCaptions())
+      const season = series.episodes[currentSeason - 1]
+      if (currentEpisode >= season.length) { // first episode
+        setCurrentSeason(currentSeason - 1)
+        setCurrentEpisode(series.episodes[currentSeason - 2].length)
+      } else setCurrentEpisode(currentEpisode - 1)
     }
-
   useEffect(
     () => {
-      buildData()
+      // series check
+      const series = props.data.series
+      if (series && !checkEpisodeValidity(series)) {
+        setCurrentEpisode(1)
+        setCurrentSeason(1)
+      }
+
+      setHasLoaded(true)
+      setVideoUrl(getVideoUrl())
+
+      setCaptionUrl(getCaptionUrl())
+      setVideoTitle(getVideoTitle())
     },
     []
   )
-  
+
   useEffect(
     () => {
-      Router.push(
-        {
-          pathname: `/watch/${props.data?._id}`,
-          query: currSeason === 1 && currSeason === 1 ? {} : {
-            s: currSeason,
-            e: currSeason
-          }
-        },
-        undefined,
-        { shallow: false }
-      )
+      setVideoUrl(getVideoUrl())
+      setCaptionUrl(getCaptionUrl())
+
+      setVideoTitle(getVideoTitle())
     },
-    [currEpisode, currSeason]
+    [currentEpisode, currentSeason]
   )
 
-  return (
-    <div>
-      <Video
-        src={videoUrl ?? ''}
-        autoPlay
-        autoFullScreen
-        title={videoTitle}
-        onPrevious={onPrevious}
-        onNext={onNext}
-        captions={captions}
-      />
-    </div>
-  )  
+  return hasLoaded ? (
+    <Video
+      autoFullScreen
+      autoPlay
+      
+      src={videoUrl}
+      subtitle={videoSubtitle}
+
+      onNext={nextEpisode}
+      onPrevious={previousEpisode}
+
+      captions={captionUrl}
+      title={videoTitle}
+    />
+  ) : null
 }
+
 const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const {
     s: season,
@@ -144,7 +166,7 @@ const getServerSideProps = async (context: GetServerSidePropsContext) => {
     props: {
       season: isNaN(season as any) ? '1' : season,
       episode: isNaN(episode as any) ? '1' : episode,
-      data: res.data
+      data: res.data ?? {}
     }
   }
 }

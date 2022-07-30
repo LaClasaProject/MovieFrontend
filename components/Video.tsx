@@ -117,6 +117,8 @@ const Video = forwardRef(
         const container = props.autoFullScreen ? document.body : containerRef.current
         if (!container) return
 
+        setIsFullScreen(!isFullScreen)
+
         if (document.fullscreenElement)
           fscreen.exitFullscreen()
         else container.requestFullscreen({ navigationUI: 'hide' })
@@ -261,12 +263,7 @@ const Video = forwardRef(
         <div
           className='captions'
           style={
-            {
-              fontSize: '32px',
-              paddingBottom: controlsShown ? '60px' : '0px',
-
-              transition: 'ease-in-out .2s'
-            }
+            { paddingBottom: controlsShown ? '100px' : '20px' }
           }
         >
           {
@@ -399,10 +396,12 @@ const Video = forwardRef(
 
             <div
               className='flex row center extra-controls wrap'
-              style={{ fontSize: '28px', gap: '15px' }}
+              style={{ gap: '15px' }}
             >
               <div className='flex row center'>
-                <div><SoundOutlined style={{ cursor: 'pointer' }} /></div>
+                <div>
+                  <SoundOutlined style={{ cursor: 'pointer' }} />
+                </div>
                 <div>
                   <Slider
                     style={{ width: '80px' }}
@@ -420,7 +419,6 @@ const Video = forwardRef(
               <div>
                 <Tooltip title='Previous Episode'>
                   <VerticalRightOutlined
-                    style={{ cursor: !!props.onPrevious ? 'pointer' : 'not-allowed' }}
                     onClick={props.onPrevious}
                   />
                 </Tooltip>
@@ -429,7 +427,6 @@ const Video = forwardRef(
               <div>
                 <Tooltip title='Next Episode'>
                   <VerticalLeftOutlined
-                    style={{ cursor: !!props.onNext ? 'pointer' : 'not-allowed' }}
                     onClick={props.onNext}
                   />
                 </Tooltip>

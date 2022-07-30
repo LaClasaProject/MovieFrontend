@@ -14,7 +14,9 @@ This requires the backend server to be online as that's where it gets the videos
       - [x] Redesign custom video player. (Fix lousy coding)
       - [x] Ready for v2-beta.
       - [x] Deploy v2
-    - [ ] Add caption options.
+    - [x] Add caption options.
+    - [x] Fix routing bugs.
+    - [x] Scaling ui.
 
   ### User Related Features
   - [ ] User Login/Signup system.
