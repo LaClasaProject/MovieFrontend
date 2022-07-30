@@ -119,7 +119,7 @@ const Video = forwardRef(
 
         if (document.fullscreenElement)
           fscreen.exitFullscreen()
-        else fscreen.requestFullscreenFunction(container)
+        else container.requestFullscreen({ navigationUI: 'hide' })
       },
       onKeyboardPress = (ev: any) => {
         const video = getVideo()
@@ -352,7 +352,7 @@ const Video = forwardRef(
 
           <div className='absolute-bottom bottom-controls'>
             <div
-              className='flex row center wrap'
+              className='flex row center'
               style={{ paddingLeft: '5px', paddingRight: '5px' }}
             >
               <div className='w-100'>
@@ -398,7 +398,7 @@ const Video = forwardRef(
             </div>
 
             <div
-              className='flex row center extra-controls'
+              className='flex row center extra-controls wrap'
               style={{ fontSize: '28px', gap: '15px' }}
             >
               <div className='flex row center'>

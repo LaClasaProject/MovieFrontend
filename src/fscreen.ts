@@ -56,7 +56,7 @@ const vendor =
 
 // prettier-ignore
 export default {
-  requestFullscreen: element => element[vendor[key.requestFullscreen]]({ navigationUI: 'hide' }),
+  requestFullscreen: element => element[vendor[key.requestFullscreen]](),
   requestFullscreenFunction: element => element[vendor[key.requestFullscreen]],
   get exitFullscreen() { return document[vendor[key.exitFullscreen]].bind(document); },
   get fullscreenPseudoClass() { return `:${vendor[key.fullscreen]}`; },
