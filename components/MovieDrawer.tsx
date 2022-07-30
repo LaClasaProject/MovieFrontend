@@ -94,6 +94,7 @@ const MovieDrawer = (
                       trigger={
                         ['click']
                       }
+                      disabled={!video.available}
                       overlay={
                         (
                           <Menu

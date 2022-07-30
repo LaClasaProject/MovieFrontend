@@ -324,7 +324,9 @@ const Video = forwardRef(
                 style={
                   {
                     fontSize: '14px',
-                    color: '#858585'
+                    color: '#858585',
+
+                    textShadow: '2px 2px 3px #212121'
                   }
                 }
               >
@@ -476,6 +478,7 @@ const Video = forwardRef(
               opacity: controlsShown ? .7 : 1
             }
           }
+          src={props.src}
 
           autoPlay={props.autoPlay}
           className={
@@ -498,10 +501,8 @@ const Video = forwardRef(
           onPlay={() => setPaused(false)}
 
           onCanPlay={() => play()}
-          crossOrigin='anonymous'
+          //crossOrigin='anonymous'
         >
-          <source src={props.src} type='video/mp4' />
-
           { /* todo add option for subtitles */ }
           <track
             ref={textTrackRef as any}

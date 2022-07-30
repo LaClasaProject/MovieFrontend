@@ -146,19 +146,29 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
                     <div className='poster'>
                       <SkeletonImage
                         style={
-                          video.lock && Date.now() < video.lock.until ? (
-                            {
-                              cursor: 'not-allowed',
-                              filter: 'grayscale(100%)'
-                            }
-                          ) : undefined
+                          (video.lock && Date.now() < video.lock.until ||
+                            !video.available ||
+                            video.misc?.upcoming) ? (
+                              {
+                                cursor: 'not-allowed',
+                                filter: 'grayscale(100%)'
+                              }
+                            ) : undefined
                         }
                         width={170}
                         height={250}
                         src={video.images?.poster ?? ''}
                         alt={video.meta.title}
                         onClick={
-                          () => setVideo(video)
+                          () => {
+                            if (
+                              video.lock && Date.now() < video.lock.until ||
+                              !video.available ||
+                              video.misc?.upcoming
+                            ) return
+
+                            setVideo(video)
+                          }
                         }
                       />
                     </div>

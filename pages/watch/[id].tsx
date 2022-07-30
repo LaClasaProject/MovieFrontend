@@ -63,7 +63,7 @@ const WatchVideo = (
       }
     },
     checkEpisodeValidity = (series: ISeriesData) => {
-      if (currentSeason >= series.seasons) return false
+      if (currentSeason > series.seasons) return false
       else {
         const season = series.episodes[currentSeason - 1]
         if (!season || !season[currentEpisode - 1]) return false
@@ -94,10 +94,9 @@ const WatchVideo = (
         )
       ) return // disallow movies, first episode at first season
 
-      const season = series.episodes[currentSeason - 1]
-      if (currentEpisode >= season.length) { // first episode
+      if (currentEpisode <=  1) { // first episode
         setCurrentSeason(currentSeason - 1)
-        setCurrentEpisode(series.episodes[currentSeason - 2].length)
+        setCurrentEpisode(series.episodes[currentSeason - 1].length)
       } else setCurrentEpisode(currentEpisode - 1)
     }
   useEffect(
