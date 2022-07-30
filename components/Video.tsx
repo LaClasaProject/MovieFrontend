@@ -154,6 +154,8 @@ const Video = forwardRef(
         
         if (isFullScreen)
           fscreen.exitFullscreen()
+
+        Router.back()
       },
       onPressSeekLeft = () => {
         if (!controlsShown) return
