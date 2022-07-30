@@ -472,7 +472,6 @@ const Video = forwardRef(
               opacity: controlsShown ? .7 : 1
             }
           }
-          src={props.src}
 
           autoPlay={props.autoPlay}
           className={
@@ -497,6 +496,8 @@ const Video = forwardRef(
           onCanPlay={() => play()}
           crossOrigin='anonymous'
         >
+          <source src={props.src} type='video/mp4' />
+
           { /* todo add option for subtitles */ }
           <track
             ref={textTrackRef as any}
