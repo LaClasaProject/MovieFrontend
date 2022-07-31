@@ -147,7 +147,7 @@ const Video = forwardRef(
       onBackButton = () => {
         if (!controlsShown) return
         
-        if (isFullScreen)
+        if (isFullScreen || document.fullscreenElement)
           fscreen.exitFullscreen()
 
         Router.back()
