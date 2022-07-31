@@ -186,9 +186,6 @@ const Video = forwardRef(
 
     useEffect(
       () => {
-        const container = props.autoFullScreen ? document.body : containerRef.current
-        container?.focus()
-
         if (props.autoFullScreen)
           setIsFullScreen(!!document.fullscreenElement)
         else setIsFullScreen(!!isFullScreen)
