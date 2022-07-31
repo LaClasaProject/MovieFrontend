@@ -50,12 +50,11 @@ const WatchCarousel = (
               >
                 <Image
                   style={{ width: '100%', height: 'auto' }}
-                  width={1920}
-                  height={480}
                   src={video.images?.thumbnail ?? ''}
                   alt={video.meta.title}
                   loading='lazy'
                   fallback='/images/failed.png'
+                  preview={false}
                 />
 
                 <div

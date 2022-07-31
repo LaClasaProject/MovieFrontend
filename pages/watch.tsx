@@ -155,6 +155,7 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
                               }
                             ) : undefined
                         }
+                        preview={false}
                         width={170}
                         height={250}
                         src={video.images?.poster ?? ''}
