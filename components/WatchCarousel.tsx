@@ -5,9 +5,10 @@ import {
 } from '../src/types'
 
 import { Image, Tag } from 'antd'
-import { PlayCircleFilled } from '@ant-design/icons'
+import { InfoCircleOutlined } from '@ant-design/icons'
 
 import { convertMsToStringTime } from '../src/utils'
+import Button from './Button'
 
 const WatchCarousel = (
   props: {
@@ -41,13 +42,12 @@ const WatchCarousel = (
         infiniteLoop
         centerMode
         showThumbs={false}
+        showIndicators={false}
       >
         {
           props.videos?.map(
             (video, index) => (
-              <div
-                key={index}
-              >
+              <div key={index}>
                 <Image
                   style={{ width: '100%', height: 'auto' }}
                   src={video.images?.thumbnail ?? ''}
@@ -57,54 +57,45 @@ const WatchCarousel = (
                   preview={false}
                 />
 
-                <div
-                  className='carousel-item-data'
-                >
-                  <div className='carousel-item-text'>
-                    <div
-                      style={
-                        {
-                          display: 'flex',
-                          flexDirection: 'row',
+                { /* left text */ }
+                <div className='carousel-left-container'>
+                  <div className='carousel-title-info'>
+                    <div>
+                      {video.meta.title}
+                    </div>
 
-                          flexWrap: 'wrap',
-                          gap: '5px'
-                        }
-                      }
-                    >
-                      <div>
-                        {video.meta.title}
-                      </div>
-
-                      <Tag
-                        color={
-                          video.series ? 'red' : 'blue'
-                        }
-                        className='carousel-item-tag'
-                      >
-                        {
-                          video.series ?
-                            'Series' :
-                            'Movie'
-                        }
+                    <div className='carousel-title-tag'>
+                      <Tag color={video.series ? 'red' : 'cyan'}>
+                        {video.series ? 'Series' : 'Movie'}
                       </Tag>
                     </div>
-
-                    <div>
-                      {convertMsToStringTime(video.runtime || 0)}
-                    </div>
                   </div>
 
-                  <div
-                    className='carousel-item-button'
+                  <div>
+                    {convertMsToStringTime(video.runtime ?? 0)}
+                  </div>
+                </div>
+
+                { /* right data */ }
+                <div className='carousel-right-container'>
+                  <Button
+                    color='purple'
+                    style={{ textAlign: 'center' }}
+                    onClick={() => props.onClickPlay(video)}
                   >
-                    <PlayCircleFilled
-                      onClick={
-                        () => props.onClickPlay(video)
-                      }
-                      className='carousel-play-button'
-                    />
-                  </div>
+                    <div
+                      className='flex row'
+                      style={{ gap: '5px' }}
+                    >
+                      <div>
+                        More Info
+                      </div>
+
+                      <div>
+                        <InfoCircleOutlined />
+                      </div>
+                    </div>
+                  </Button>
                 </div>
               </div>
             )

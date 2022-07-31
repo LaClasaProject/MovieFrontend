@@ -21,11 +21,22 @@ const MovieDrawer = (
     onMenuClick: (menu: MenuInfo) => any
   }
 ) => {
-  const [innerWidth, setInnerWidth] = useState(1024)
+  const [innerWidth, setInnerWidth] = useState(1024),
+    onChangeWidth = () => setInnerWidth(window.innerWidth)
 
   useEffect(
     () => {
       setInnerWidth(window.innerWidth ?? 0)
+
+      window.addEventListener(
+        'resize',
+        onChangeWidth
+      )
+
+      return () => window.removeEventListener(
+        'reize',
+        onChangeWidth
+      )
     },
     []
   )
