@@ -1,14 +1,10 @@
-import Image, { ImageProps } from 'next/image'
 import { useState } from 'react'
-
 import { Skeleton } from 'antd'
 
-interface SkeletonImageProps extends ImageProps {
-  src: any
-}
+import { SkeletonImageProps } from 'antd/lib/skeleton/Image'
 
 const SkeletonImage = (
-  props: SkeletonImageProps
+  props: SkeletonImageProps & JSX.IntrinsicElements['img']
 ) => {
   const [imgHasLoaded, setImgHasLoaded] = useState(false)
 
@@ -25,8 +21,7 @@ const SkeletonImage = (
         hidden={imgHasLoaded}
         style={
           {
-            position: 'absolute',
-            zIndex: '2'
+            position: 'absolute'
           }
         }
       >
@@ -42,11 +37,17 @@ const SkeletonImage = (
 
       {
         !props.src ? null : (
-          <Image
+          <img
             {...props}
+            src={props.src ?? ''}
+            width={props.width}
+            height={props.height}
             alt=''
             onLoad={
-              () => setImgHasLoaded(true)
+              () => {
+                console.log('hii')
+                setImgHasLoaded(true)
+              }
             }
             onError={
               () => setImgHasLoaded(true)

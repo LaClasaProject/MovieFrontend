@@ -1,5 +1,4 @@
 import { Carousel } from 'react-responsive-carousel'
-import Image from 'next/image'
 
 import {
   IVideoData
@@ -9,6 +8,7 @@ import { Tag } from 'antd'
 import { PlayCircleFilled } from '@ant-design/icons'
 
 import { convertMsToStringTime } from '../src/utils'
+import SkeletonImage from './SkeletonImage'
 
 const WatchCarousel = (
   props: {
@@ -51,7 +51,7 @@ const WatchCarousel = (
               <div
                 key={index}
               >
-                <Image
+                <SkeletonImage
                   src={video.images?.thumbnail ?? ''}
                   width={1920}
                   height={1080}

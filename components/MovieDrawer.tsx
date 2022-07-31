@@ -229,14 +229,14 @@ const MovieDrawer = (
                         Router.push(`/watch/${video?._id}`)
                     }
                   }
-                  color={video.available || !video.misc?.upcoming ? 'green' : 'red'}
+                  color={!video.available || video.misc?.upcoming ? 'red' : 'green'}
                   disabled={!video.available || video.misc?.upcoming}
                 >
                   <CaretRightFilled />
                   {
-                    video.available || !video.misc?.upcoming ? (
-                      ' Watch Now'
-                    ) : ' Coming Soon'
+                    video.misc?.upcoming ? ' Coming Soon' : (
+                      !video.available ? ' Unavailable' : ' Watch Now'
+                    )
                   }
                 </Button>
               )

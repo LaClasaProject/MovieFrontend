@@ -231,26 +231,32 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
 }
 
 export const getServerSideProps = async () => {
-  const videos: IVideoData[] = (
-      await (
-        await fetch(`${reqUrl}?limit=10`)
-      ).json()
-    ).data ?? [],
-  misc: IVideoData[] = (
-      await (
-        await fetch(`${reqUrl}?pinned=true&upcoming=true`)
-      ).json()
-    ).data ?? []
+  try {
+    const videos: IVideoData[] = (
+        await (
+          await fetch(`${reqUrl}?limit=10`)
+        ).json()
+      ).data ?? [],
+    misc: IVideoData[] = (
+        await (
+          await fetch(`${reqUrl}?pinned=true&upcoming=true`)
+        ).json()
+      ).data ?? []
 
-  return {
-    props: {
-      videos,
-      upcoming: misc.filter(
-        (vid) => vid.misc?.upcoming
-      ),
-      pinned: misc.filter(
-        (vid) => vid.misc?.pinned
-      )
+    return {
+      props: {
+        videos,
+        upcoming: misc.filter(
+          (vid) => vid.misc?.upcoming
+        ),
+        pinned: misc.filter(
+          (vid) => vid.misc?.pinned
+        )
+      }
+    }
+  } catch {
+    return {
+      props: { videos: [], upcoming: [], pinned: [] }
     }
   }
 }
