@@ -42,7 +42,7 @@ const Video = forwardRef(
       [isFullScreen, setIsFullScreen] = useState(false),
       [caption, setCaption] = useState(''),
       [captionsOn, setCaptionsOn] = useState(true),
-      containerRef = useRef()
+      containerRef = useRef<HTMLDivElement>()
 
     const getVideo = () => {
         const video = videoRef.current
@@ -176,7 +176,8 @@ const Video = forwardRef(
 
         setCaption(cue?.text ?? '')
       },
-      onToggleCaptions = () => setCaptionsOn(!captionsOn)
+      onToggleCaptions = () => setCaptionsOn(!captionsOn),
+      toolTipPopupContainer = () => props.autoFullScreen ? document.body : containerRef.current as HTMLDivElement
 
     useEffect(
       () => {
@@ -190,8 +191,11 @@ const Video = forwardRef(
 
     useEffect(
       () => {
-        if (document)
-          setIsFullScreen(!!document.fullscreenElement)
+        if (props.autoFullScreen) {
+          if (document) setIsFullScreen(!!document.fullscreenElement)
+        } else {
+          if (containerRef.current) setIsFullScreen(!!isFullScreen)
+        }
 
         const track = textTrackRef.current
         if (!track) return
@@ -228,6 +232,80 @@ const Video = forwardRef(
         }
       }
     )
+
+    // Components
+    const CaptionsButton = () => (
+        <div>
+          <Tooltip
+            title={`Captions ${captionsOn ? 'On' : 'Off'}`}
+          >
+            <CopyrightOutlined
+              onClick={onToggleCaptions}
+            />
+          </Tooltip>
+        </div>
+      ),
+      FullScreenButton = () => (
+        <div>
+          {
+            isFullScreen ? (
+              <FullscreenExitOutlined onClick={onClickFullScreen} />
+            ) : (
+              <FullscreenOutlined onClick={onClickFullScreen} />
+            )
+          }
+        </div>
+      ),
+      EpisodeSwitcherButton = () => (
+        <>
+          <div>
+            <Tooltip
+              title='Previous Episode'
+              getPopupContainer={toolTipPopupContainer}
+            >
+              <VerticalRightOutlined
+                onClick={props.onPrevious}
+              />
+            </Tooltip>
+          </div>
+
+          <div>
+            <Tooltip
+              title='Next Episode'
+              getPopupContainer={toolTipPopupContainer}
+            >
+              <VerticalLeftOutlined
+                onClick={props.onNext}
+              />
+            </Tooltip>
+          </div>
+        </>
+      ),
+      VolumeButton = () => (
+        <div>
+          <Tooltip
+            getTooltipContainer={toolTipPopupContainer}
+            title={
+              (
+                <Slider
+                  style={{ height: '80px' }}
+                  min={0}
+                  max={1}
+                  step={0.1}
+                  value={volume}
+                  vertical
+                  onChange={(val) => setVolume(val)}
+                  trackStyle={{ backgroundColor: '#4593ff' }}
+                  handleStyle={{ backgroundColor: '#4593ff' }}
+                  getTooltipPopupContainer={toolTipPopupContainer}
+                />
+              )
+            }
+          >
+            <SoundOutlined style={{ cursor: 'pointer' }} />
+          </Tooltip>
+        </div>
+      )
 
     return (
       <div
@@ -356,8 +434,45 @@ const Video = forwardRef(
           <div className='absolute-bottom bottom-controls'>
             <div
               className='flex row center'
-              style={{ paddingLeft: '5px', paddingRight: '5px' }}
+              style={{ paddingLeft: '10px', paddingRight: '10px', gap: '10px' }}
             >
+              {
+                props.minimalControls ? (
+                  <> { /* for some reason, this doesn't work if i use the components */ }
+                    <div>
+                      {
+                        isFullScreen ? (
+                          <FullscreenExitOutlined onClick={onClickFullScreen} />
+                        ) : (
+                          <FullscreenOutlined onClick={onClickFullScreen} />
+                        )
+                      }
+                    </div>
+                    <Tooltip
+                      getTooltipContainer={toolTipPopupContainer}
+                      title={
+                        (
+                          <Slider
+                            style={{ height: '80px' }}
+                            min={0}
+                            max={1}
+                            step={0.1}
+                            value={volume}
+                            vertical
+                            onChange={(val) => setVolume(val)}
+                            trackStyle={{ backgroundColor: '#4593ff' }}
+                            handleStyle={{ backgroundColor: '#4593ff' }}
+                            getTooltipPopupContainer={toolTipPopupContainer}
+                          />
+                        )
+                      }
+                    >
+                      <SoundOutlined style={{ cursor: 'pointer' }} />
+                    </Tooltip>
+                  </>
+                ) : null
+              }
+
               <div className='w-100'>
                 <Slider
                   min={0}
@@ -369,6 +484,7 @@ const Video = forwardRef(
                   trackStyle={{ backgroundColor: '#a13cff' }}
                   handleStyle={{ backgroundColor: '#a13cff' }}
                   tooltipPlacement='top'
+                  getTooltipPopupContainer={toolTipPopupContainer}
                   tipFormatter={
                     (val: number = 0) => {
                       const formatted = moment.utc(val * 1000)
@@ -400,72 +516,19 @@ const Video = forwardRef(
               </div>
             </div>
 
-            <div
-              className='flex row center extra-controls wrap'
-              style={{ gap: '15px' }}
-            >
-              <div className='flex row center'>
-                <div>
-                  <SoundOutlined style={{ cursor: 'pointer' }} />
-                </div>
-                <div>
-                  <Slider
-                    style={{ width: '80px' }}
-                    min={0}
-                    max={1}
-                    step={0.1}
-                    value={volume}
-                    onChange={(val) => setVolume(val)}
-                    trackStyle={{ backgroundColor: '#4593ff' }}
-                    handleStyle={{ backgroundColor: '#4593ff' }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Tooltip title='Previous Episode'>
-                  <VerticalRightOutlined
-                    onClick={props.onPrevious}
-                  />
-                </Tooltip>
-              </div>
-
-              <div>
-                <Tooltip title='Next Episode'>
-                  <VerticalLeftOutlined
-                    onClick={props.onNext}
-                  />
-                </Tooltip>
-              </div>
-              
-              <div>
-                {
-                  isFullScreen ? (
-                    <FullscreenExitOutlined onClick={onClickFullScreen} />
-                  ) : (
-                    <FullscreenOutlined onClick={onClickFullScreen} />
-                  )
-                }
-              </div>
-
-              <div
-                className='flex row center'
-                style={{ gap: '5px', cursor: 'pointer' }}
-                onClick={onToggleCaptions}
-              >
-                <div>
-                  <CopyrightOutlined />
-                </div>
-
+            {
+              props.minimalControls ? null : (
                 <div
-                  style={{ fontSize: '14px', }}
+                  className='flex row center extra-controls wrap'
+                  style={{ gap: '15px' }}
                 >
-                  {captionsOn ? (
-                    <s>Captions</s>
-                  ) : 'Captions'}
+                  <VolumeButton />
+                  <EpisodeSwitcherButton />
+                  <FullScreenButton />
+                  <CaptionsButton />
                 </div>
-              </div>
-            </div>
+              )
+            }
           </div>
         </div>
         

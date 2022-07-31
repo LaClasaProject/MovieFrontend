@@ -85,6 +85,8 @@ interface ICustomVideoProps {
 
   onNext?: () => void
   onPrevious?: () => void
+
+  minimalControls?: boolean
 }
 
 export type {

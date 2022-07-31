@@ -177,12 +177,10 @@ pre {
   word-wrap: break-word;
 
   text-align: center;
+  font-family: 'PT Sans';
 }
 
 .captions {
-  z-index: 1;
-  font-family: 'PT Sans';
-
   position: absolute;  
   bottom: 0;
 
@@ -196,6 +194,8 @@ pre {
 
   font-size: 20px;
   transition: ease-in-out .2s;
+
+  z-index: 1;
 }
 
 video::cue {
@@ -204,7 +204,7 @@ video::cue {
 
 .extra-controls {
   margin-bottom: 2px;
-  font-size: 28px;
+  font-size: 20px;
 }
 
 .extra-controls > * {
@@ -246,11 +246,7 @@ video::cue {
 }
 
 video::cue {
-  position: absolute;
-  line-height: 50px;
-
   background-color: transparent;
-  text-shadow: 2px 2px 3px black;
 }
 
 @media (max-width: 720px) {

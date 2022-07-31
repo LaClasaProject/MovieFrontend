@@ -58,6 +58,7 @@ const MovieDrawer = (
                 noPip
                 className='responsive-video'
                 noBackButton
+                minimalControls
               />
             </div>
       
