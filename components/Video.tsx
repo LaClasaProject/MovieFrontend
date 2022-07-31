@@ -20,7 +20,7 @@ import Router from 'next/router'
 
 // control elements
 import VolumeButton from './controls/Volume'
-import FullScreenButton from './controls/Fullscreen'
+import FullScreenButton from './controls/FullScreen'
 import CaptionsButton from './controls/Captions'
 import EpisodeSwitcherButton from './controls/EpisodeSwitcher'
 import VideoSlider from './controls/VideoSlider'
