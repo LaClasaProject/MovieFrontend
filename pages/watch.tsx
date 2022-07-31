@@ -7,9 +7,9 @@ import WatchCarousel from '../components/WatchCarousel'
 import { useRef, useState } from 'react'
 
 import Button from '../components/Button'
-import SkeletonImage from '../components/SkeletonImage'
-
 import MovieDrawer from '../components/MovieDrawer'
+
+import { Image } from 'antd'
 
 const reqUrl = `${process.env.API_HOST}/videos`
 
@@ -144,7 +144,7 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
                     className='poster-container'
                   >
                     <div className='poster'>
-                      <SkeletonImage
+                      <Image
                         style={
                           (video.lock && Date.now() < video.lock.until ||
                             !video.available ||
@@ -159,6 +159,8 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
                         height={250}
                         src={video.images?.poster ?? ''}
                         alt={video.meta.title}
+                        loading='lazy'
+                        fallback='/images/failed.png'
                         onClick={
                           () => {
                             if (

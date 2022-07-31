@@ -4,11 +4,10 @@ import {
   IVideoData
 } from '../src/types'
 
-import { Tag } from 'antd'
+import { Image, Tag } from 'antd'
 import { PlayCircleFilled } from '@ant-design/icons'
 
 import { convertMsToStringTime } from '../src/utils'
-import SkeletonImage from './SkeletonImage'
 
 const WatchCarousel = (
   props: {
@@ -40,10 +39,8 @@ const WatchCarousel = (
       <Carousel
         showArrows
         infiniteLoop
-        showThumbs={false}
         centerMode
-        showIndicators={false}
-        emulateTouch
+        showThumbs={false}
       >
         {
           props.videos?.map(
@@ -51,10 +48,14 @@ const WatchCarousel = (
               <div
                 key={index}
               >
-                <SkeletonImage
-                  src={video.images?.thumbnail ?? ''}
+                <Image
+                  style={{ width: '100%', height: 'auto' }}
                   width={1920}
-                  height={1080}
+                  height={480}
+                  src={video.images?.thumbnail ?? ''}
+                  alt={video.meta.title}
+                  loading='lazy'
+                  fallback='/images/failed.png'
                 />
 
                 <div
