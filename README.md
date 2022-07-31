@@ -17,6 +17,7 @@ This requires the backend server to be online as that's where it gets the videos
     - [x] Add caption options.
     - [x] Fix routing bugs.
     - [x] Scaling ui.
+    - [ ] Move play button, seek left & seek right buttons to separate file. (Video Player)
 
   ### User Related Features
   - [ ] User Login/Signup system.

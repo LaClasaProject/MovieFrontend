@@ -7,29 +7,24 @@ import {
   useState
 } from 'react'
 
-import {
-  Slider, Tooltip
-} from 'antd'
-import moment from 'moment'
-
-import fscreen from 'fscreen'
+import fscreen from '../src/fscreen'
 import {
   ArrowLeftOutlined,
   CaretRightFilled,
-  CopyrightOutlined,
   DoubleLeftOutlined,
   DoubleRightOutlined,
-  FullscreenExitOutlined,
-  FullscreenOutlined,
-  PauseOutlined,
-  SoundOutlined,
-  VerticalLeftOutlined,
-  VerticalRightOutlined
+  PauseOutlined
 } from '@ant-design/icons'
 
 import Router from 'next/router'
 
-const formatNum = (value: number = 0) => moment.utc((value || 0) * 1000).format('HH:mm:ss')
+// control elements
+import VolumeButton from './controls/Volume'
+import FullScreenButton from './controls/Fullscreen'
+import CaptionsButton from './controls/Captions'
+import EpisodeSwitcherButton from './controls/EpisodeSwitcher'
+import VideoSlider from './controls/VideoSlider'
+import VideoTime from './controls/VideoTime'
 
 const Video = forwardRef(
   (props: ICustomVideoProps, ref) => {
@@ -121,7 +116,7 @@ const Video = forwardRef(
 
         if (document.fullscreenElement)
           fscreen.exitFullscreen()
-        else container.requestFullscreen({ navigationUI: 'hide' })
+        else fscreen.requestFullscreen(container)
       },
       onKeyboardPress = (ev: any) => {
         const video = getVideo()
@@ -191,11 +186,12 @@ const Video = forwardRef(
 
     useEffect(
       () => {
-        if (props.autoFullScreen) {
-          if (document) setIsFullScreen(!!document.fullscreenElement)
-        } else {
-          if (containerRef.current) setIsFullScreen(!!isFullScreen)
-        }
+        const container = props.autoFullScreen ? document.body : containerRef.current
+        container?.focus()
+
+        if (props.autoFullScreen)
+          setIsFullScreen(!!document.fullscreenElement)
+        else setIsFullScreen(!!isFullScreen)
 
         const track = textTrackRef.current
         if (!track) return
@@ -232,80 +228,6 @@ const Video = forwardRef(
         }
       }
     )
-
-    // Components
-    const CaptionsButton = () => (
-        <div>
-          <Tooltip
-            title={`Captions ${captionsOn ? 'On' : 'Off'}`}
-          >
-            <CopyrightOutlined
-              onClick={onToggleCaptions}
-            />
-          </Tooltip>
-        </div>
-      ),
-      FullScreenButton = () => (
-        <div>
-          {
-            isFullScreen ? (
-              <FullscreenExitOutlined onClick={onClickFullScreen} />
-            ) : (
-              <FullscreenOutlined onClick={onClickFullScreen} />
-            )
-          }
-        </div>
-      ),
-      EpisodeSwitcherButton = () => (
-        <>
-          <div>
-            <Tooltip
-              title='Previous Episode'
-              getPopupContainer={toolTipPopupContainer}
-            >
-              <VerticalRightOutlined
-                onClick={props.onPrevious}
-              />
-            </Tooltip>
-          </div>
-
-          <div>
-            <Tooltip
-              title='Next Episode'
-              getPopupContainer={toolTipPopupContainer}
-            >
-              <VerticalLeftOutlined
-                onClick={props.onNext}
-              />
-            </Tooltip>
-          </div>
-        </>
-      ),
-      VolumeButton = () => (
-        <div>
-          <Tooltip
-            getTooltipContainer={toolTipPopupContainer}
-            title={
-              (
-                <Slider
-                  style={{ height: '80px' }}
-                  min={0}
-                  max={1}
-                  step={0.1}
-                  value={volume}
-                  vertical
-                  onChange={(val) => setVolume(val)}
-                  trackStyle={{ backgroundColor: '#4593ff' }}
-                  handleStyle={{ backgroundColor: '#4593ff' }}
-                  getTooltipPopupContainer={toolTipPopupContainer}
-                />
-              )
-            }
-          >
-            <SoundOutlined style={{ cursor: 'pointer' }} />
-          </Tooltip>
-        </div>
-      )
 
     return (
       <div
@@ -434,86 +356,47 @@ const Video = forwardRef(
           <div className='absolute-bottom bottom-controls'>
             <div
               className='flex row center'
-              style={{ paddingLeft: '10px', paddingRight: '10px', gap: '10px' }}
+              style={
+                {
+                  paddingLeft: '10px',
+                  paddingRight: '10px',
+
+                  gap: '10px',
+                  fontSize: '20px',
+
+                  marginTop: '5px',
+                  marginBottom: '5px'
+                }
+              }
             >
               {
                 props.minimalControls ? (
-                  <> { /* for some reason, this doesn't work if i use the components */ }
-                    <div>
-                      {
-                        isFullScreen ? (
-                          <FullscreenExitOutlined onClick={onClickFullScreen} />
-                        ) : (
-                          <FullscreenOutlined onClick={onClickFullScreen} />
-                        )
-                      }
-                    </div>
-                    <Tooltip
-                      getTooltipContainer={toolTipPopupContainer}
-                      title={
-                        (
-                          <Slider
-                            style={{ height: '80px' }}
-                            min={0}
-                            max={1}
-                            step={0.1}
-                            value={volume}
-                            vertical
-                            onChange={(val) => setVolume(val)}
-                            trackStyle={{ backgroundColor: '#4593ff' }}
-                            handleStyle={{ backgroundColor: '#4593ff' }}
-                            getTooltipPopupContainer={toolTipPopupContainer}
-                          />
-                        )
-                      }
-                    >
-                      <SoundOutlined style={{ cursor: 'pointer' }} />
-                    </Tooltip>
+                  <>
+                    <FullScreenButton
+                      isFullScreen={isFullScreen}
+                      onChange={onClickFullScreen}
+                    />
+                    <VolumeButton
+                      onChangeVolume={setVolume}
+                      toolTipContainer={toolTipPopupContainer}
+                      volume={volume}
+                    />
                   </>
                 ) : null
               }
 
-              <div className='w-100'>
-                <Slider
-                  min={0}
-                  max={videoRef.current?.duration}
-                  step={0.1}
-                  value={currentTime}
-                  onChange={onSeek}
-                  onAfterChange={afterSeek}
-                  trackStyle={{ backgroundColor: '#a13cff' }}
-                  handleStyle={{ backgroundColor: '#a13cff' }}
-                  tooltipPlacement='top'
-                  getTooltipPopupContainer={toolTipPopupContainer}
-                  tipFormatter={
-                    (val: number = 0) => {
-                      const formatted = moment.utc(val * 1000)
-                        .format('HH:mm:ss')
-  
-                      return (
-                        <>
-                          {formatted}
-                        </>
-                      )
-                    }
-                  }
-                />
-              </div>
+              <VideoSlider
+                max={videoRef.current?.duration ?? 0}
+                onSeek={onSeek}
+                onDoneSeek={afterSeek}
+                toolTipContainer={toolTipPopupContainer}
+                value={currentTime}
+              />
 
-              <div
-                className='flex row'
-                style={{ gap: '5px' }}
-              >
-                <div>
-                  {formatNum(currentTime)}
-                </div>
-
-                <div>/</div>
-
-                <div>
-                  {formatNum(videoRef?.current?.duration)}
-                </div>
-              </div>
+              <VideoTime
+                current={currentTime}
+                max={videoRef.current?.duration ?? 0}
+              />
             </div>
 
             {
@@ -522,10 +405,24 @@ const Video = forwardRef(
                   className='flex row center extra-controls wrap'
                   style={{ gap: '15px' }}
                 >
-                  <VolumeButton />
-                  <EpisodeSwitcherButton />
-                  <FullScreenButton />
-                  <CaptionsButton />
+                  <VolumeButton
+                    onChangeVolume={setVolume}
+                    toolTipContainer={toolTipPopupContainer}
+                    volume={volume}
+                  />
+                  <EpisodeSwitcherButton
+                    toolTipContainer={toolTipPopupContainer}
+                    onPrevious={props.onPrevious}
+                    onNext={props.onNext}
+                  />
+                  <FullScreenButton
+                    isFullScreen={isFullScreen}
+                    onChange={onClickFullScreen}
+                  />
+                  <CaptionsButton
+                    on={captionsOn}
+                    onChange={onToggleCaptions}
+                  />
                 </div>
               )
             }
