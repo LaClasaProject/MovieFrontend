@@ -25,6 +25,7 @@ import CaptionsButton from './controls/Captions'
 import EpisodeSwitcherButton from './controls/EpisodeSwitcher'
 import VideoSlider from './controls/VideoSlider'
 import VideoTime from './controls/VideoTime'
+import FitButton from './controls/Fit'
 
 const Video = forwardRef(
   (props: ICustomVideoProps, ref) => {
@@ -37,7 +38,8 @@ const Video = forwardRef(
       [isFullScreen, setIsFullScreen] = useState(false),
       [caption, setCaption] = useState(''),
       [captionsOn, setCaptionsOn] = useState(true),
-      containerRef = useRef<HTMLDivElement>()
+      containerRef = useRef<HTMLDivElement>(),
+      [currentFit, setCurrentFit] = useState<'fill' | 'contain'>('contain')
 
     const getVideo = () => {
         const video = videoRef.current
@@ -171,6 +173,7 @@ const Video = forwardRef(
 
         setCaption(cue?.text ?? '')
       },
+      onClickFit = () => setCurrentFit(currentFit === 'contain' ? 'fill' : 'contain'),
       onToggleCaptions = () => setCaptionsOn(!captionsOn),
       toolTipPopupContainer = () => props.autoFullScreen ? document.body : containerRef.current as HTMLDivElement
 
@@ -415,13 +418,18 @@ const Video = forwardRef(
                     onPrevious={props.onPrevious}
                     onNext={props.onNext}
                   />
-                  <FullScreenButton
-                    isFullScreen={isFullScreen}
-                    onChange={onClickFullScreen}
-                  />
                   <CaptionsButton
                     on={captionsOn}
                     onChange={onToggleCaptions}
+                  />
+                  <FitButton
+                    mode={currentFit}
+                    onToggleFit={onClickFit}
+                    toolTipContainer={toolTipPopupContainer}
+                  />
+                  <FullScreenButton
+                    isFullScreen={isFullScreen}
+                    onChange={onClickFullScreen}
                   />
                 </div>
               )
@@ -435,7 +443,8 @@ const Video = forwardRef(
           style={
             {
               transition: 'ease-in-out .2s',
-              opacity: controlsShown ? .7 : 1
+              opacity: controlsShown ? .7 : 1,
+              objectFit: currentFit
             }
           }
           src={props.src}
