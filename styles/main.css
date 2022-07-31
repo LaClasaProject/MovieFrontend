@@ -71,7 +71,7 @@ html, body {
   height: 100%;
   
   display: block;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .video-content:before {

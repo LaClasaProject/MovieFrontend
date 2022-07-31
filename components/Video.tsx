@@ -186,6 +186,9 @@ const Video = forwardRef(
 
     useEffect(
       () => {
+        const container = props.autoFullScreen ? document.body : containerRef.current
+        container?.focus()
+
         if (props.autoFullScreen)
           setIsFullScreen(!!document.fullscreenElement)
         else setIsFullScreen(!!isFullScreen)
@@ -458,7 +461,7 @@ const Video = forwardRef(
           onPlay={() => setPaused(false)}
 
           onCanPlay={() => play()}
-          crossOrigin='anonymous'
+          //crossOrigin='anonymous'
         >
           { /* todo add option for subtitles */ }
           <track
