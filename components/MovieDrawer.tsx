@@ -23,13 +23,16 @@ const MovieDrawer = (
 ) => {
   const [innerWidth, setInnerWidth] = useState(1024),
     onChangeWidth = () => setInnerWidth(window.innerWidth),
-    isIos = (/iPad|iPhone|iPod/.test(navigator.platform) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
-      !(window as any).MSStream
+    [isIos, setIsIos] = useState(false)
 
   useEffect(
     () => {
       setInnerWidth(window.innerWidth ?? 0)
+      setIsIos(
+        (/iPad|iPhone|iPod/.test(navigator.platform) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
+          !(window as any).MSStream
+      )
 
       window.addEventListener(
         'resize',
