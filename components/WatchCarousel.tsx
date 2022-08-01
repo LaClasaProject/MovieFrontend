@@ -43,13 +43,13 @@ const WatchCarousel = (
         centerMode
         showThumbs={false}
         showIndicators={false}
+        dynamicHeight={true}
       >
         {
           props.videos?.map(
             (video, index) => (
               <div key={index}>
                 <Image
-                  style={{ width: '100%', height: 'auto' }}
                   src={video.images?.thumbnail ?? ''}
                   alt={video.meta.title}
                   loading='lazy'

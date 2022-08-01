@@ -9,7 +9,7 @@ import { useRef, useState } from 'react'
 import Button from '../components/Button'
 import MovieDrawer from '../components/MovieDrawer'
 
-import { Image } from 'antd'
+import { Alert, Image } from 'antd'
 
 const reqUrl = `${process.env.API_HOST}/videos`
 
@@ -47,10 +47,24 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
           gap: '50px',
           justifyContent: 'center',
 
-          alignItems: 'center'
+          alignItems: 'center',
+          marginTop: '10px'
         }
       }
     >
+      {
+        process.env.WARNING_MSG?.length ?? 0 > 0 ? (
+          <div>
+            <Alert
+              message='Warning'
+              description={process.env.WARNING_MSG}
+              type='warning'
+              showIcon
+            />
+          </div>
+        ) : null
+      }
+
       <WatchCarousel
         videos={pinned}
         header={
