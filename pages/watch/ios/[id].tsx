@@ -33,7 +33,7 @@ const IosVideo = (
     <div className='video-content'>
       <video
         autoPlay
-        className='fullscreen-video'
+        className='fullscreen-video ios-video'
 
         src={getVideoUrl()}
         

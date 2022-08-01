@@ -140,8 +140,6 @@ const WatchVideo = (
 
       captions={captionUrl}
       title={videoTitle}
-
-      className='normal-video'
     />
   ) : null
 }
