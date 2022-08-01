@@ -25,7 +25,6 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
     [season, setSeason] = useState<number>(0),
     [page, setPage] = useState<number>(1),
     [videosInPage, setVideosInPage] = useState<IVideoData[]>(videos),
-    timeout = useRef<NodeJS.Timeout>(),
     [isLoadingVideos, setIsLoadingVideos] = useState(true)
 
   const getVideos = async (page: number, limit = 10) => {
@@ -38,20 +37,6 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
 
     return videos
   }
-
-  useEffect(
-    () => {
-      timeout.current = setTimeout(
-        () => setIsLoadingVideos(false),
-        3000
-      )
-
-      return () => {
-        clearTimeout(timeout.current)
-      }
-    },
-    []
-  )
 
   return (
     <div
@@ -246,16 +231,11 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
                 if (page <= 1) return
 
                 setIsLoadingVideos(true)
-                clearTimeout(timeout.current)
-
-                timeout.current = setTimeout(
-                  () => setIsLoadingVideos(false),
-                  3000
-                )
-
                 setPage(page - 1)
+
                 const videos = await getVideos(page - 1)
 
+                setIsLoadingVideos(false)
                 setVideosInPage(videos)
               }
             }
@@ -271,16 +251,11 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
                 if (videosInPage.length < 10) return
 
                 setIsLoadingVideos(true)
-                clearTimeout(timeout.current)
-
-                timeout.current = setTimeout(
-                  () => setIsLoadingVideos(false),
-                  3000
-                )
-
                 setPage(page + 1)
+                
                 const videos = await getVideos(page + 1)
 
+                setIsLoadingVideos(false)
                 setVideosInPage(videos)
               }
             }
