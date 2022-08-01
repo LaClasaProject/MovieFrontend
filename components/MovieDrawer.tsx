@@ -22,7 +22,10 @@ const MovieDrawer = (
   }
 ) => {
   const [innerWidth, setInnerWidth] = useState(1024),
-    onChangeWidth = () => setInnerWidth(window.innerWidth)
+    onChangeWidth = () => setInnerWidth(window.innerWidth),
+    isIos = (/iPad|iPhone|iPod/.test(navigator.platform) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
+      !(window as any).MSStream
 
   useEffect(
     () => {
@@ -174,11 +177,13 @@ const MovieDrawer = (
                                       <div
                                         onClick={
                                           () => {
+                                            const base = isIos ? '/watch/ios' : '/watch'
+
                                             Router.push(
                                               season === 1 && key + 1 === 1 ? (
-                                                `/watch/${video._id}`
+                                                `${base}/${video._id}`
                                               ) : (
-                                                `/watch/${video._id}?s=${season}&e=${key + 1}`
+                                                `${base}/${video._id}?s=${season}&e=${key + 1}`
                                               )
                                             )
                                           }
@@ -236,8 +241,10 @@ const MovieDrawer = (
                 <Button
                   onClick={
                     () => {
+                      const base = isIos ? '/watch/ios' : '/watch'
+
                       if (video?.available)
-                        Router.push(`/watch/${video?._id}`)
+                        Router.push(`${base}/${video?._id}`)
                     }
                   }
                   color={!video.available || video.misc?.upcoming ? 'red' : 'green'}

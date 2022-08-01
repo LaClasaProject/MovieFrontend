@@ -4,12 +4,12 @@ import {
 } from '../src/types'
 
 import WatchCarousel from '../components/WatchCarousel'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-import Button from '../components/Button'
 import MovieDrawer from '../components/MovieDrawer'
 
-import { Alert, Image } from 'antd'
+import { Alert, Image, Spin } from 'antd'
+import { Loading3QuartersOutlined, LoadingOutlined, VerticalLeftOutlined, VerticalRightOutlined } from '@ant-design/icons'
 
 const reqUrl = `${process.env.API_HOST}/videos`
 
@@ -24,7 +24,9 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
     videoRef = useRef() as any,
     [season, setSeason] = useState<number>(0),
     [page, setPage] = useState<number>(1),
-    [videosInPage, setVideosInPage] = useState<IVideoData[]>(videos)
+    [videosInPage, setVideosInPage] = useState<IVideoData[]>(videos),
+    timeout = useRef<NodeJS.Timeout>(),
+    [isLoadingVideos, setIsLoadingVideos] = useState(true)
 
   const getVideos = async (page: number, limit = 10) => {
     const skip = (page - 1) * limit,
@@ -36,6 +38,20 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
 
     return videos
   }
+
+  useEffect(
+    () => {
+      timeout.current = setTimeout(
+        () => setIsLoadingVideos(false),
+        3000
+      )
+
+      return () => {
+        clearTimeout(timeout.current)
+      }
+    },
+    []
+  )
 
   return (
     <div
@@ -148,50 +164,61 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
           }
         >
           {
-            videosInPage.length < 1 ? (
-              'Nothing to see here'
-            ) : (
-              videosInPage.map(
-                (video, key) => (
-                  <div
-                    key={key}
-                    className='poster-container'
-                  >
-                    <div className='poster'>
-                      <Image
-                        style={
-                          (video.lock && Date.now() < video.lock.until ||
-                            !video.available ||
-                            video.misc?.upcoming) ? (
-                              {
-                                cursor: 'not-allowed',
-                                filter: 'grayscale(100%)'
-                              }
-                            ) : undefined
-                        }
-                        preview={false}
-                        width={170}
-                        height={250}
-                        src={video.images?.poster ?? ''}
-                        alt={video.meta.title}
-                        loading='lazy'
-                        fallback='/images/failed.png'
-                        onClick={
-                          () => {
-                            if (
-                              video.lock && Date.now() < video.lock.until ||
+            !isLoadingVideos ? (
+              videosInPage.length < 1 ? (
+                'Nothing to see here'
+              ) : (
+                videosInPage.map(
+                  (video, key) => (
+                    <div
+                      key={key}
+                      className='poster-container'
+                    >
+                      <div className='poster'>
+                        <Image
+                          style={
+                            (video.lock && Date.now() < video.lock.until ||
                               !video.available ||
-                              video.misc?.upcoming
-                            ) return
-
-                            setVideo(video)
+                              video.misc?.upcoming) ? (
+                                {
+                                  cursor: 'not-allowed',
+                                  filter: 'grayscale(100%)'
+                                }
+                              ) : undefined
                           }
-                        }
-                      />
+                          preview={false}
+                          width={170}
+                          height={250}
+                          src={video.images?.poster ?? ''}
+                          alt={video.meta.title}
+                          loading='lazy'
+                          fallback='/images/failed.png'
+                          onClick={
+                            () => {
+                              if (
+                                video.lock && Date.now() < video.lock.until ||
+                                !video.available ||
+                                video.misc?.upcoming
+                              ) return
+
+                              setVideo(video)
+                            }
+                          }
+                        />
+                      </div>
                     </div>
-                  </div>
-                )          
+                  )          
+                )
               )
+            ) : (
+              <Spin
+                indicator={
+                  <Loading3QuartersOutlined
+                    spin
+                    style={{ fontSize: '32px' }}
+                  />
+                }
+              />
             )
           }
         </div>
@@ -205,16 +232,26 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
               gap: '10px',
               flexWrap: 'wrap',
 
-              marginBottom: '10px'
+              marginBottom: '10px',
+              fontSize: '24px'
             }
           }
         >
-          <Button
+          <VerticalRightOutlined
             disabled={page <= 1}
+            style={{ cursor: page <= 1 || isLoadingVideos ? 'not-allowed' : 'pointer' }}
             color='red'
             onClick={
               async () => {
                 if (page <= 1) return
+
+                setIsLoadingVideos(true)
+                clearTimeout(timeout.current)
+
+                timeout.current = setTimeout(
+                  () => setIsLoadingVideos(false),
+                  3000
+                )
 
                 setPage(page - 1)
                 const videos = await getVideos(page - 1)
@@ -224,13 +261,22 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
             }
           >
             Previous
-          </Button>
-          <Button
+          </VerticalRightOutlined>
+          <VerticalLeftOutlined
             disabled={videosInPage.length < 10}
+            style={{ cursor: videosInPage.length < 10 || isLoadingVideos ? 'not-allowed' : 'pointer' }}
             color='green'
             onClick={
               async () => {
                 if (videosInPage.length < 10) return
+
+                setIsLoadingVideos(true)
+                clearTimeout(timeout.current)
+
+                timeout.current = setTimeout(
+                  () => setIsLoadingVideos(false),
+                  3000
+                )
 
                 setPage(page + 1)
                 const videos = await getVideos(page + 1)
@@ -240,7 +286,7 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
             }
           >
             Next
-          </Button>
+          </VerticalLeftOutlined>
         </div>
       </div>
     </div>

@@ -289,8 +289,7 @@ const Video = forwardRef(
               width: '100%',
               height: '100%',
 
-              transition: 'ease-in-out .2s',
-              opacity: Number(controlsShown)
+              visibility: controlsShown ? 'visible' : 'hidden'
             }
           }
         >
@@ -442,9 +441,8 @@ const Video = forwardRef(
 
           style={
             {
-              transition: 'ease-in-out .2s',
-              opacity: controlsShown ? .7 : 1,
-              objectFit: currentFit
+              objectFit: currentFit,
+              backgroundColor: `rgb(0, 0, 0, ${controlsShown ? '.7' : '1'})`
             }
           }
           src={props.src}
