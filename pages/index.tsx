@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 const HomePage = () => (
   <div
-  style={
+    style={
       {
         textAlign: 'center',
         display: 'flex',

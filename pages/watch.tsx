@@ -38,6 +38,13 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
     return videos
   }
 
+  useEffect(
+    () => {
+      setIsLoadingVideos(false)
+    },
+    []
+  )
+
   return (
     <div
       style={
