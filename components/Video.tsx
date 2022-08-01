@@ -436,49 +436,51 @@ const Video = forwardRef(
           </div>
         </div>
         
-        <video
-          {...props.videoProps}
+        <div className='normal-vid'>
+          <video
+            {...props.videoProps}
 
-          style={
-            {
-              objectFit: currentFit,
-              backgroundColor: `rgb(0, 0, 0, ${controlsShown ? '.7' : '1'})`
+            style={
+              {
+                objectFit: currentFit,
+                backgroundColor: `rgb(0, 0, 0, ${controlsShown ? '.7' : '1'})`
+              }
             }
-          }
-          src={props.src}
+            src={props.src}
 
-          autoPlay={props.autoPlay}
-          className={
-            props.autoFullScreen ? 
-              `fullscreen-video ${props.videoProps?.className ?? ''}`.trim() :
-              props.videoProps?.className
-          }
-
-          disablePictureInPicture={props.noPip}
-          ref={videoRef as any}
-
-          onTimeUpdate={onTimeUpdate}
-          onEnded={
-            () => {
-              setPaused(true)
-              seek(0)
+            autoPlay={props.autoPlay}
+            className={
+              props.autoFullScreen ? 
+                `fullscreen-video ${props.videoProps?.className ?? ''}`.trim() :
+                props.videoProps?.className
             }
-          }
-          onPause={() => setPaused(true)}
-          onPlay={() => setPaused(false)}
 
-          onCanPlay={() => play()}
-          crossOrigin='anonymous'
-        >
-          { /* todo add option for subtitles */ }
-          <track
-            ref={textTrackRef as any}
-            default
-            src={(props.captions ?? '') + '/english.vtt'}
-            kind='captions'
-            srcLang='en'
-          />
-        </video>
+            disablePictureInPicture={props.noPip}
+            ref={videoRef as any}
+
+            onTimeUpdate={onTimeUpdate}
+            onEnded={
+              () => {
+                setPaused(true)
+                seek(0)
+              }
+            }
+            onPause={() => setPaused(true)}
+            onPlay={() => setPaused(false)}
+
+            onCanPlay={() => play()}
+            crossOrigin='anonymous'
+          >
+            { /* todo add option for subtitles */ }
+            <track
+              ref={textTrackRef as any}
+              default
+              src={(props.captions ?? '') + '/english.vtt'}
+              kind='captions'
+              srcLang='en'
+            />
+          </video>
+        </div>
       </div>
     )
   }

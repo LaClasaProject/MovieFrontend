@@ -197,7 +197,7 @@ pre {
   z-index: 1;
 }
 
-normal-video::cue {
+.normal-vid video::cue {
   opacity: 0;
 }
 
