@@ -50,7 +50,11 @@ html, body {
 }
 
 .header h2 {
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .fullscreen-video {
@@ -260,5 +264,11 @@ video::cue {
 @media (max-width: 720px) {
   .extra-controls {
     font-size: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    text-align: center
   }
 }
