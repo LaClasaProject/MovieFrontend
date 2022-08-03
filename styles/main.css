@@ -267,7 +267,7 @@ video::cue {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 720px) {
   .header {
     text-align: center
   }

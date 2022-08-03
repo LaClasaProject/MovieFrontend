@@ -302,7 +302,11 @@ export const getServerSideProps = async () => {
             await fetch(`${reqURL}?pinned=true&upcoming=true`) // fetch all pinned and upcoming
           ).json()
         ).data ?? [],
-      recent = videos.slice(0, -5) // get first 5
+      recent: IVideoData[] = (
+        await (
+          await fetch(`${reqURL}?recently_added=true`)
+        ).json()
+      ).data ?? []
 
     return {
       props: {
