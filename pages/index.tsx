@@ -49,24 +49,24 @@ const HomePage = () => (
 
       <Button
         color='green'
-        className='flex row center'
-        style={{ gap: '5px' }}
         onClick={() => window.location.href = '/watch'}
+        textCentered
+        icon={
+          <CaretRightFilled />
+        }
       >
         Watch Movies
-
-        <CaretRightFilled />
       </Button>
 
       <Button
-        color='cyan'
-        className='flex row center'
-        style={{ gap: '5px' }}
+        color='blurple'
         onClick={() => window.location.href = process.env.DISCORD_INV ?? ''}
+        textCentered
+        icon={
+          <WechatFilled />
+        }
       >
         Join Our Discord
-
-        <WechatFilled />
       </Button>
     </div>
 
