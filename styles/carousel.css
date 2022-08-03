@@ -1,5 +1,6 @@
 .carousel-container {
   text-shadow: 1px 1px 3px black;
+  min-height: 20px;
 }
 
 .carousel-left-container {

@@ -222,8 +222,6 @@ video.ios-video::cue {
 .extra-controls > * {
   border-radius: 5px;
   padding: 2px 3px 2px 3px;
-
-  transition: ease-in-out .2s;
 }
 
 .extra-controls > *:hover {

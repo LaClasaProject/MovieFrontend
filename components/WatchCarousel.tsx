@@ -31,9 +31,7 @@ const WatchCarousel = (
       {props.header}
     </div>
 
-    <div
-      className='carousel-container'
-    >
+    <div className='carousel-container'>
       <Carousel
         showArrows
         infiniteLoop
