@@ -9,17 +9,18 @@ import { useEffect, useRef, useState } from 'react'
 import MovieDrawer from '../components/MovieDrawer'
 
 import { Alert, Image, Spin } from 'antd'
-import { Loading3QuartersOutlined, LoadingOutlined, VerticalLeftOutlined, VerticalRightOutlined } from '@ant-design/icons'
+import { Loading3QuartersOutlined, VerticalLeftOutlined, VerticalRightOutlined } from '@ant-design/icons'
 
-const reqUrl = `${process.env.API_HOST}/videos`
+const reqURL = `${process.env.API_HOST}/videos`
 
 interface IApiVideoData {
   videos: IVideoData[]
   upcoming: IVideoData[]
   pinned: IVideoData[]
+  recent: IVideoData[]
 }
 
-const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
+const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned, recent }) => {
   const [video, setVideo] = useState<IVideoData | null>(null),
     videoRef = useRef() as any,
     [season, setSeason] = useState<number>(0),
@@ -31,7 +32,7 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
     const skip = (page - 1) * limit,
       videos: IVideoData[] = (
         await (
-          await fetch(`${reqUrl}?skip=${skip}&limit=${limit}`)
+          await fetch(`${reqURL}?skip=${skip}&limit=${limit}`)
         ).json() as any
       ).data ?? []
 
@@ -79,6 +80,20 @@ const WatchPage: NextPage<IApiVideoData> = ({ videos, upcoming, pinned }) => {
           (
             <h2>
               Featured Shows & Movies
+            </h2>
+          )
+        }
+        onClickPlay={
+          (video) => setVideo(video)
+        }
+      />
+
+      <WatchCarousel
+        videos={recent}
+        header={
+          (
+            <h2>
+              Recently Added Shows & Movies
             </h2>
           )
         }
@@ -279,14 +294,19 @@ export const getServerSideProps = async () => {
   try {
     const videos: IVideoData[] = (
         await (
-          await fetch(`${reqUrl}?limit=10`)
+          await fetch(`${reqURL}?limit=10`)
         ).json()
       ).data ?? [],
-    misc: IVideoData[] = (
-        await (
-          await fetch(`${reqUrl}?pinned=true&upcoming=true`)
-        ).json()
-      ).data ?? []
+      misc: IVideoData[] = (
+          await (
+            await fetch(`${reqURL}?pinned=true&upcoming=true`) // fetch all pinned and upcoming
+          ).json()
+        ).data ?? [],
+      recent: IVideoData[] = (
+          await (
+            await fetch(`${reqURL}?new=true`) // fetch recently added.
+          ).json()
+        ) ?? []
 
     return {
       props: {
@@ -296,7 +316,8 @@ export const getServerSideProps = async () => {
         ),
         pinned: misc.filter(
           (vid) => vid.misc?.pinned
-        )
+        ),
+        recent
       }
     }
   } catch {

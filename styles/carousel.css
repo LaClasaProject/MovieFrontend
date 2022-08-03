@@ -1,7 +1,4 @@
 .carousel-container {
-  max-width: 1024px;
-  margin: 5px;
-
   text-shadow: 1px 1px 3px black;
 }
 
@@ -26,7 +23,6 @@
   flex-direction: row;
 
   gap: 5px;
-
 }
 
 .carousel-title-tag {

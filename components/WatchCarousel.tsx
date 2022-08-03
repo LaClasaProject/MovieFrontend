@@ -23,10 +23,7 @@ const WatchCarousel = (
         display: 'flex',
         flexDirection: 'column',
 
-        justifyContent: 'center',
-        alignItems: 'center',
-
-        textAlign: 'center',
+        justifyContent: 'center'
       }
     }
   >
@@ -55,6 +52,7 @@ const WatchCarousel = (
                   loading='lazy'
                   fallback='/images/failed.png'
                   preview={false}
+                  width='100%'
                 />
 
                 { /* left text */ }

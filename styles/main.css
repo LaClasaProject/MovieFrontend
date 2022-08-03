@@ -45,7 +45,12 @@ html, body {
   font-family: 'Bebas Neue';
   font-size: 32px;
 
-  text-shadow: 2px 2px 2px #252525;
+  text-shadow: 2px 2px 3px #787878;
+  font-weight: 600;
+}
+
+.header h2 {
+  margin: 0;
 }
 
 .fullscreen-video {

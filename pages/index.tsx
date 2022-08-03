@@ -47,29 +47,27 @@ const HomePage = () => (
         You can watch shows and movies on the button below.
       </div>     
 
-      <Link href='/watch'>
-        <Button
-          color='green'
-          className='flex row center'
-          style={{ gap: '5px' }}
-        >
-          Watch Movies
+      <Button
+        color='green'
+        className='flex row center'
+        style={{ gap: '5px' }}
+        onClick={() => window.location.href = '/watch'}
+      >
+        Watch Movies
 
-          <CaretRightFilled />
-        </Button>
-      </Link>
+        <CaretRightFilled />
+      </Button>
 
-      <Link href={process.env.DISCORD_INV ?? ''}>
-        <Button
-          color='cyan'
-          className='flex row center'
-          style={{ gap: '5px' }}
-        >
-          Join Our Discord
+      <Button
+        color='cyan'
+        className='flex row center'
+        style={{ gap: '5px' }}
+        onClick={() => window.location.href = process.env.DISCORD_INV ?? ''}
+      >
+        Join Our Discord
 
-          <WechatFilled />
-        </Button>
-      </Link>
+        <WechatFilled />
+      </Button>
     </div>
 
   </div>
