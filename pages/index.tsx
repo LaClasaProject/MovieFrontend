@@ -1,8 +1,6 @@
 import { CaretRightFilled, WechatFilled } from '@ant-design/icons'
 import Button from '../components/Button'
 
-import Link from 'next/link'
-
 const HomePage = () => (
   <div
     style={
@@ -50,7 +48,7 @@ const HomePage = () => (
       <Button
         color='green'
         onClick={() => window.location.href = '/watch'}
-        textCentered
+        centered
         icon={
           <CaretRightFilled />
         }
@@ -61,7 +59,7 @@ const HomePage = () => (
       <Button
         color='blurple'
         onClick={() => window.location.href = process.env.DISCORD_INV ?? ''}
-        textCentered
+        centered
         icon={
           <WechatFilled />
         }

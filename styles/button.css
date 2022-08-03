@@ -14,84 +14,8 @@
 
 .btn:hover {
 	transform: translateY(-4px);
-  background-color: #2c2c2c;
-
-  box-shadow: var(--DEFAULT_BTN_SHADOWS) #2c2c2c;
-  color: white;
 }
 
 .btn:active {
 	transform: translateY(-2px);
-}
-
-.btn.purple {
-  color: #bb87ff;
-  border-color: #bb87ff
-}
-
-.btn.purple:hover {
-	color: white;
-  background-color: #bb87ff;
-
-  box-shadow: var(--DEFAULT_BTN_SHADOWS) #bb87ff;
-}
-
-.btn.green {
-  color: #89da83;
-  border-color: #89da83;
-}
-
-.btn.green:hover {
-	color: white;
-  background-color: #89da83;
-
-  box-shadow: var(--DEFAULT_BTN_SHADOWS) #89da83;
-}
-
-.btn.blue {
-  color: #75afff;
-  border-color: #75afff
-}
-
-.btn.blue:hover {
-	color: white;
-  background-color: #75afff;
-
-  box-shadow: var(--DEFAULT_BTN_SHADOWS) #75afff;
-}
-
-.btn.red {
-  color: #ff7a7a;
-  border-color: #ff7a7a
-}
-
-.btn.red:hover {
-	color: white;
-  background-color: #ff7a7a;
-
-  box-shadow: var(--DEFAULT_BTN_SHADOWS) #ff7a7a;
-}
-
-.btn.cyan {
-  color: #73eaff;
-  border-color: #73eaff
-}
-
-.btn.cyan:hover {
-	color: white;
-  background-color: #73eaff;
-
-  box-shadow: var(--DEFAULT_BTN_SHADOWS) #73eaff;
-}
-
-.btn.blurple {
-  color: #5865F2;
-  border-color: #5865F2
-}
-
-.btn.blurple:hover {
-	color: white;
-  background-color: #5865F2;
-
-  box-shadow: var(--DEFAULT_BTN_SHADOWS) #5865F2;
 }

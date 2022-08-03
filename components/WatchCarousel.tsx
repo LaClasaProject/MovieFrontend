@@ -39,6 +39,7 @@ const WatchCarousel = (
         showThumbs={false}
         showIndicators={false}
         dynamicHeight={true}
+        className='carousel-element'
       >
         {
           props.videos?.map(
@@ -51,6 +52,9 @@ const WatchCarousel = (
                   fallback='/images/failed.png'
                   preview={false}
                   width='100%'
+                  style={
+                    { minHeight: '80px' }
+                  }
                 />
 
                 { /* left text */ }
@@ -76,21 +80,14 @@ const WatchCarousel = (
                 <div className='carousel-right-container'>
                   <Button
                     color='purple'
-                    style={{ textAlign: 'center' }}
                     onClick={() => props.onClickPlay(video)}
+                    centered
+                    filled
+                    icon={
+                      <InfoCircleOutlined />
+                    }
                   >
-                    <div
-                      className='flex row'
-                      style={{ gap: '5px' }}
-                    >
-                      <div>
-                        More Info
-                      </div>
-
-                      <div>
-                        <InfoCircleOutlined />
-                      </div>
-                    </div>
+                    More Info
                   </Button>
                 </div>
               </div>

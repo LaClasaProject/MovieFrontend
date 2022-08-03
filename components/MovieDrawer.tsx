@@ -141,6 +141,10 @@ const MovieDrawer = (
                         <Button
                           disabled={!video.available}
                           color='cyan'
+                          centered
+                          icon={
+                            <DownOutlined />
+                          }
                         >
                           {
                             (
@@ -149,7 +153,6 @@ const MovieDrawer = (
                                 'List of Seasons'
                             ) + ' '
                           }
-                          <DownOutlined />
                         </Button>
                       </div>
                     </Dropdown> 
@@ -252,8 +255,11 @@ const MovieDrawer = (
                   }
                   color={!video.available || video.misc?.upcoming ? 'red' : 'green'}
                   disabled={!video.available || video.misc?.upcoming}
+                  centered
+                  icon={
+                    <CaretRightFilled />
+                  }
                 >
-                  <CaretRightFilled />
                   {
                     video.misc?.upcoming ? ' Coming Soon' : (
                       !video.available ? ' Unavailable' : ' Watch Now'
